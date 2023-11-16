@@ -37,9 +37,21 @@
             <div class="quiz-header">
                 <b>You scored @score points!</b>
             </div>
+             <div class="quiz-header">
+                <b>Out of @(Questions.Count()) Questions!</b>
+            </div>
             <div class="quiz-footer">
                 <button class="next-btn" @onclick="@RestartQuiz">Play Again</button>
             </div>
+              <div class="app-title">
+                 @("Questions incorrectly answered:")
+           @for (int i = 0; i < failedIndex; i++)
+    {
+        @failedQuestions[i]
+                    
+                }
+            </div>
+
         }
     </div>
 </div>
