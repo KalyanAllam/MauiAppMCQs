@@ -204,7 +204,7 @@ namespace MauiAppMCQs.Pages
             Question q25 = new Question
             {
                 QuestionTitle = "What is the capital of Fiji?",
-                Options = new List<string>() { "Port Vila", "Suva", "Tahiti", "Maui" },
+                Options = new List<string>() { "Port Vila", "Suva", "Papeete", "Port Vila" },
                 Answer = "Suva"
             };
 

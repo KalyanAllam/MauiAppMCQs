@@ -46,8 +46,10 @@
               <div class="app-title">
                  @("Questions incorrectly answered:")
            @for (int i = 0; i < failedIndex; i++)
-    {
-        @failedQuestions[i]
+                {
+                     <p>
+                    @failedQuestions[i]
+                    </p>
                     
                 }
             </div>
