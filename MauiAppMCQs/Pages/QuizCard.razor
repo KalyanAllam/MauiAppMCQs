@@ -20,7 +20,14 @@
             </div>
         }
         else
-        {
+        { @if(questionIndex==0)
+            {
+                <div class="quiz-footer">
+                    <button class="next-btn" @onclick="TakeQuiz">Take Quiz</button>
+                </div>
+            }
+            else
+            { 
             <div class="app-title">
                 @if (score > (Questions.Count / 2))
                 {
@@ -44,7 +51,7 @@
                 <button class="next-btn" @onclick="@RestartQuiz">Play Again</button>
             </div>
               <div class="app-title">
-                 @("Questions incorrectly answered:")
+                 @("Questions incorrectly answered  with answers:")
            @for (int i = 0; i < failedIndex; i++)
                 {
                      <p>
@@ -53,7 +60,7 @@
                     
                 }
             </div>
-
+            }
         }
     </div>
 </div>
