@@ -42,6 +42,8 @@ namespace MauiAppMCQs.Pages
         {
             score = 0;
             questionIndex = 0;
+            failedIndex = 0;
+           failedQuestions[failedIndex] = "";
         }
         async Task<List<InQuestion>> GetApiData()
         {
