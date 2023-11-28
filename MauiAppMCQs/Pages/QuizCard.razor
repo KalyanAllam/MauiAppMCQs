@@ -20,14 +20,7 @@
             </div>
         }
         else
-        { @if(questionIndex==0)
-            {
-                <div class="quiz-footer">
-                    <button class="next-btn" @onclick="TakeQuiz">Take Quiz</button>
-                </div>
-            }
-            else
-            { 
+        { 
             <div class="app-title">
                 @if (score > (Questions.Count / 1.5))
                 {
@@ -39,16 +32,19 @@
                 }
             </div>
             <div class="app-title">
-                @(score > (Questions.Count() / 2) ? "Congratulations" : "Better Luck Next Time")
+                @(score > (Questions.Count() / 2) ? "Congratulations" : "Good Luck")
             </div>
-            <div class="quiz-header">
-                <b>You scored @score points!</b>
+            @if (Questions.Count() > 0)
+            {
+                <div class="quiz-header">
+                    <b>You scored @score points!</b>
+                </div>
+                <div class="quiz-header">
+                    <b>Out of @(Questions.Count()) Questions!</b>
             </div>
-             <div class="quiz-header">
-                <b>Out of @(Questions.Count()) Questions!</b>
-            </div>
+            }
             <div class="quiz-footer">
-                <button class="next-btn" @onclick="@RestartQuiz">Play Again</button>
+                <button class="next-btn" @onclick="@RestartQuiz">Take Quiz</button>
             </div>
               <div class="app-title">
                  @("Questions incorrectly answered  with answers:")
@@ -60,7 +56,7 @@
                     
                 }
             </div>
-            }
+            
         }
     </div>
 </div>
