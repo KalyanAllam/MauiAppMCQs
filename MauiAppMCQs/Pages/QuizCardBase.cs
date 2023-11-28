@@ -10,8 +10,13 @@ namespace MauiAppMCQs.Pages
         protected int score = 0;
         protected int failedIndex = 0;
         protected string[] failedQuestions= new string[100];
+
+        QuestionsDatabase questionsDatabase;
+        
+
         protected override Task OnInitializedAsync()
         {
+            questionsDatabase = new QuestionsDatabase();
             LoadQuestionsAsync();
 
             return base.OnInitializedAsync();
@@ -65,17 +70,27 @@ namespace MauiAppMCQs.Pages
 
                         // Deserialize the JSON string into an object
                         Questions = JsonConvert.DeserializeObject<List<InQuestion>>(jsonString);
+                        // truncate sqlLIte table Load sqlite table  from  Questions
+                        //If the first time when you load the api data, it will push data to the sqlite DB.
+                        List<InQuestion> itemInTheDB = await questionsDatabase.GetItemsAsync();
+                        if (itemInTheDB.Count == 0)
+                        {
+                            foreach (InQuestion item in  Questions)
+                            {
+                                await questionsDatabase.SaveItemAsync(item);
+                            }
+                        }
 
-                        
                     }
                     else
-                    {
-                        
+                    { // Load  Questions from sql lite  table
+                         Questions = await questionsDatabase.GetItemsAsync();
+
                     }
                 }
                 catch (Exception ex)
                 {
-                    
+                    Questions = await questionsDatabase.GetItemsAsync();
                 }
             }
             return Questions;

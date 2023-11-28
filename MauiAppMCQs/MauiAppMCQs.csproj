@@ -63,6 +63,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="LightForms.Sqlite" Version="1.0.2" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     </ItemGroup>
