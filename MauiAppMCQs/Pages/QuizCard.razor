@@ -6,9 +6,7 @@
     <div class="quiz">
         @if (questionIndex < Questions.Count())
         {
-            <div class="app-title">
-                Quizzing!
-            </div>
+             
             <div class="quiz-header">
                 @Questions[questionIndex].QuestionTitle
             </div>
@@ -20,7 +18,8 @@
             </div>
         }
         else
-        { 
+        {  @if (Questions.Count>0)
+            { 
             <div class="app-title">
                 @if (score > (Questions.Count / 1.5))
                 {
@@ -34,20 +33,21 @@
             <div class="app-title">
                 @(score > (Questions.Count() / 2) ? "Congratulations" : "Good Luck")
             </div>
-            @if (Questions.Count() > 0)
-            {
+           
                 <div class="quiz-header">
                     <b>You scored @score points!</b>
                 </div>
                 <div class="quiz-header">
                     <b>Out of @(Questions.Count()) Questions!</b>
             </div>
-            }
-            <div class="quiz-footer">
-                <button class="next-btn" @onclick="@RestartQuiz">Take Quiz</button>
-            </div>
+
+                @if (failedIndex > 0)
+                {
+                    @("Questions incorrectly answered  with answers:")
+
+                }
               <div class="app-title">
-                 @("Questions incorrectly answered  with answers:")
+                
            @for (int i = 0; i < failedIndex; i++)
                 {
                      <p>
@@ -56,7 +56,16 @@
                     
                 }
             </div>
-            
+                <div class="quiz-footer">
+                    <button class="next-btn" @onclick="@RestartQuiz">Take Quiz</button>
+                </div>
+            }
+            else
+            {
+                <div class="quiz-footer">
+                    <button class="next-btn" @onclick="@RestartQuiz">Take Quiz</button>
+                </div>
+            }
         }
     </div>
 </div>
