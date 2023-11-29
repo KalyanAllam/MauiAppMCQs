@@ -16,7 +16,7 @@ namespace MauiAppMCQs.Pages
 
         protected override Task OnInitializedAsync()
         {
-       //     questionsDatabase = new QuestionsDatabase();
+           questionsDatabase = new QuestionsDatabase();
             LoadQuestionsAsync();
 
             return base.OnInitializedAsync();
@@ -72,14 +72,14 @@ namespace MauiAppMCQs.Pages
                         Questions = JsonConvert.DeserializeObject<List<InQuestion>>(jsonString);
                         // truncate sqlLIte table Load sqlite table  from  Questions
                         //If the first time when you load the api data, it will push data to the sqlite DB.
-                    //      List<InQuestion> itemInTheDB = await questionsDatabase.GetItemsAsync();
-                   //     if (itemInTheDB.Count == 0)
-                   //     {
-                   //         foreach (InQuestion item in  Questions)
-                    //        {
-                    //            await questionsDatabase.SaveItemAsync(item);
-                    //        }
-                   //     }  
+                          List<InQuestion> itemInTheDB = await questionsDatabase.GetItemsAsync();
+                        if (itemInTheDB.Count == 0)
+                     {
+                          foreach (InQuestion item in  Questions)
+                           {
+                             await questionsDatabase.SaveItemAsync(item);
+                           }
+                      }  
 
                     }
                     else

@@ -11,9 +11,11 @@ namespace MauiAppMCQs.Models
     {
         SQLiteAsyncConnection Database;
         private SQLiteAsyncConnection _dbConnection;
+        public const string DatabaseFilename = "MCQs.db3";
         async Task Init()
-        {
-            string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MCQs.db3");
+        {  
+        string dbPath  =
+         Path.Combine(FileSystem.AppDataDirectory, DatabaseFilename);
             _dbConnection = new SQLiteAsyncConnection(dbPath);
             if (Database is not null)
                 return;

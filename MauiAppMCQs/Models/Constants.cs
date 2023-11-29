@@ -8,7 +8,7 @@ namespace MauiAppMCQs.Models
 {
     public static class Constants
     {
-       // public const string DatabaseFilename = "TodoSQLite.db3";
+       public const string DatabaseFilename = "MCQs.db3";
 
         public const SQLite.SQLiteOpenFlags Flags =
             // open the database in read/write mode
@@ -18,7 +18,7 @@ namespace MauiAppMCQs.Models
             // enable multi-threaded database access
             SQLite.SQLiteOpenFlags.SharedCache;
 
-      //  public static string DatabasePath =>
-      //      Path.Combine(FileSystem.AppDataDirectory, DatabaseFilename);
+       public static string DatabasePath =>
+         Path.Combine(FileSystem.AppDataDirectory, DatabaseFilename);
     }
 }
