@@ -16,7 +16,9 @@ namespace MauiAppMCQs.Pages
 
         protected override Task OnInitializedAsync()
         {
-           questionsDatabase = new QuestionsDatabase();
+
+            //  Uncomment below line if db needs to be loaded
+         //  questionsDatabase = new QuestionsDatabase();
             LoadQuestionsAsync();
 
             return base.OnInitializedAsync();
@@ -25,6 +27,9 @@ namespace MauiAppMCQs.Pages
 
         protected void OptionSelected(string option)
         {
+             
+
+
             if (option.Trim() == Questions[questionIndex].Answer.Trim())
             {
                 score++;
@@ -72,14 +77,18 @@ namespace MauiAppMCQs.Pages
                         Questions = JsonConvert.DeserializeObject<List<InQuestion>>(jsonString);
                         // truncate sqlLIte table Load sqlite table  from  Questions
                         //If the first time when you load the api data, it will push data to the sqlite DB.
-                          List<InQuestion> itemInTheDB = await questionsDatabase.GetItemsAsync();
-                        if (itemInTheDB.Count == 0)
-                     {
-                          foreach (InQuestion item in  Questions)
-                           {
-                             await questionsDatabase.SaveItemAsync(item);
-                           }
-                      }  
+
+                        //comment begins
+
+                    //      List<InQuestion> itemInTheDB = await questionsDatabase.GetItemsAsync();
+                //        if (itemInTheDB.Count == 0)
+                //     {
+                 //         foreach (InQuestion item in  Questions)
+                  //         {
+                  //           await questionsDatabase.SaveItemAsync(item);
+                  //         }
+                  //    }
+                        //comment ends
 
                     }
                     else
@@ -105,10 +114,10 @@ namespace MauiAppMCQs.Pages
             List<InQuestion> res = await GetApiData();
 
             Questions.AddRange(res.Select(r => new Question
-            {
-                QuestionTitle = r.QuestionTitle,
+            {Topic=r.Topic,
+                QuestionTitle = r.QuestionTitle, 
                 Options = new List<string>() { r.Opt1, r.Opt2, r.Opt3, r.Opt4 },
-                Answer = r.Answer
+                Answer = r.Answer, Time=r.Time
             }));
 
         }

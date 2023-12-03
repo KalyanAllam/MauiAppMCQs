@@ -14,6 +14,8 @@ namespace MauiAppMCQs.Models
 
         public int No { get; set; }
 
+        public string Topic { get; set; }
+
         public string QuestionTitle { get; set; }
 
         public string Opt1 { get; set; }
@@ -25,5 +27,8 @@ namespace MauiAppMCQs.Models
         public string Opt4 { get; set; }
 
         public string Answer { get; set; }
+
+        public string Time { get; set; }
+
     }
 }

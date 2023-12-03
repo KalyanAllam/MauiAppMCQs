@@ -5,7 +5,12 @@
 <div class="container">
     <div class="quiz">
         @if (questionIndex < Questions.Count())
-        {
+        { <div class="quiz-header">
+               
+             <p>Topic</p>
+            
+            @Questions[questionIndex].Topic
+            </div>
              
             <div class="quiz-header">
                 @Questions[questionIndex].QuestionTitle
@@ -15,6 +20,11 @@
                 {
                     <OptionCard Option="@option" OnOptionSelected="OptionSelected"></OptionCard>
                 }
+            </div>
+
+            <div class="quiz-header">
+                <p>Time in minutes</p>
+                @Questions[questionIndex].Time
             </div>
         }
         else
