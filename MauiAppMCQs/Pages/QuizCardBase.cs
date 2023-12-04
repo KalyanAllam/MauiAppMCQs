@@ -10,6 +10,7 @@ namespace MauiAppMCQs.Pages
         protected int score = 0;
         protected int failedIndex = 0;
         protected string[] failedQuestions= new string[100];
+       public  int totaltime;
 
         QuestionsDatabase questionsDatabase;
         
@@ -109,7 +110,7 @@ namespace MauiAppMCQs.Pages
         {
 
 
-
+           
 
             List<InQuestion> res = await GetApiData();
 
@@ -119,6 +120,8 @@ namespace MauiAppMCQs.Pages
                 Options = new List<string>() { r.Opt1, r.Opt2, r.Opt3, r.Opt4 },
                 Answer = r.Answer, Time=r.Time
             }));
+
+            totaltime = Questions.Sum(Question => Convert.ToInt32(Question.Time));
 
         }
 
