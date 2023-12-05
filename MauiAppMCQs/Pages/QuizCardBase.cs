@@ -14,7 +14,7 @@ namespace MauiAppMCQs.Pages
         protected int failedIndex = 0;
         protected string[] failedQuestions = new string[100];
         public int totaltime;
-        private int _currentCount;
+       public int _currentCount=0;
         private System.Timers.Timer _timer;
       
 
@@ -59,11 +59,13 @@ namespace MauiAppMCQs.Pages
         }
         protected void TakeQuiz()
         {
+            _currentCount = 0;
             score = 0;
             questionIndex = 0;
         }
         protected void RestartQuiz()
         {
+            _currentCount = 0;
             score = 0;
             questionIndex = 0;
             failedIndex = 0;
@@ -107,7 +109,7 @@ namespace MauiAppMCQs.Pages
                     }
                     else
                     { // Load  Questions from sql lite  table
-                        Questions = await questionsDatabase.GetItemsAsync();
+                   //     Questions = await questionsDatabase.GetItemsAsync();
 
                     }
                 }

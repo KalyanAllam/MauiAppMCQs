@@ -4,7 +4,14 @@
 
 <div class="container">
     
-    
+      <div class="quiz-header">
+           @if (Questions.Count>0)
+           { 
+                <p>Elapsed Time in minutes</p>
+                @_currentCount
+               
+           }
+            </div>
    
 
 
@@ -31,13 +38,15 @@
             </div>
 
             <div class="quiz-header">
-                <p>Total  Time in minutes</p>
+                <p>Total  Time in seconds</p>
                 @totaltime 
             </div>
              
         }
         else
-        {  @if (Questions.Count>0)
+        { 
+           
+            @if ((Questions.Count>0)&&(@_currentCount< @totaltime))
             { 
             <div class="app-title">
                 @if (score > (Questions.Count / 1.5))
@@ -80,11 +89,15 @@
                 </div>
             }
             else
-            {
+            { @if ((Questions.Count>0)&&(@_currentCount> @totaltime))
+                {
+                    <p>You execeeded the total time alloted for this quiz</p>
+                }
                 <div class="quiz-footer">
                     <button class="next-btn" @onclick="@RestartQuiz">Take Quiz</button>
                 </div>
             }
+
         }
     </div>
 </div>
