@@ -1,12 +1,20 @@
 ﻿@page "/quizcard"
-@inherits QuizCardBase
+@inherits QuizCardBase  
 @using MauiAppMCQs.Components
 
 <div class="container">
+    
+    
+   
+
+
     <div class="quiz">
+       
+         
+        
         @if (questionIndex < Questions.Count())
         { <div class="quiz-header">
-               
+                
              <p>Topic</p>
             
             @Questions[questionIndex].Topic
@@ -26,6 +34,7 @@
                 <p>Total  Time in minutes</p>
                 @totaltime 
             </div>
+             
         }
         else
         {  @if (Questions.Count>0)

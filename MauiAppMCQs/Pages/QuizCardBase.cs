@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MauiAppMCQs.Models;
 using Newtonsoft.Json;
+using System.Timers;
+ 
+
 namespace MauiAppMCQs.Pages
 {
     public class QuizCardBase : ComponentBase
@@ -9,17 +12,27 @@ namespace MauiAppMCQs.Pages
         protected int questionIndex = 0;
         protected int score = 0;
         protected int failedIndex = 0;
-        protected string[] failedQuestions= new string[100];
-       public  int totaltime;
+        protected string[] failedQuestions = new string[100];
+        public int totaltime;
+        private int _currentCount;
+        private System.Timers.Timer _timer;
+      
 
         QuestionsDatabase questionsDatabase;
-        
+
 
         protected override Task OnInitializedAsync()
         {
-
+            _timer = new();
+            _timer.Interval = 1000;
+            _timer.Elapsed += async (object? sender, ElapsedEventArgs e) =>
+            {
+                _currentCount++;
+                await InvokeAsync(StateHasChanged);
+            };
+            _timer.Enabled = true;
             //  Uncomment below line if db needs to be loaded
-         //  questionsDatabase = new QuestionsDatabase();
+            //  questionsDatabase = new QuestionsDatabase();
             LoadQuestionsAsync();
 
             return base.OnInitializedAsync();
@@ -28,7 +41,7 @@ namespace MauiAppMCQs.Pages
 
         protected void OptionSelected(string option)
         {
-             
+
 
 
             if (option.Trim() == Questions[questionIndex].Answer.Trim())
@@ -54,7 +67,7 @@ namespace MauiAppMCQs.Pages
             score = 0;
             questionIndex = 0;
             failedIndex = 0;
-           failedQuestions[failedIndex] = "";
+            failedQuestions[failedIndex] = "";
         }
         async Task<List<InQuestion>> GetApiData()
         {
@@ -81,26 +94,26 @@ namespace MauiAppMCQs.Pages
 
                         //comment begins
 
-                    //      List<InQuestion> itemInTheDB = await questionsDatabase.GetItemsAsync();
-                //        if (itemInTheDB.Count == 0)
-                //     {
-                 //         foreach (InQuestion item in  Questions)
-                  //         {
-                  //           await questionsDatabase.SaveItemAsync(item);
-                  //         }
-                  //    }
+                        //      List<InQuestion> itemInTheDB = await questionsDatabase.GetItemsAsync();
+                        //        if (itemInTheDB.Count == 0)
+                        //     {
+                        //         foreach (InQuestion item in  Questions)
+                        //         {
+                        //           await questionsDatabase.SaveItemAsync(item);
+                        //         }
+                        //    }
                         //comment ends
 
                     }
                     else
                     { // Load  Questions from sql lite  table
-                         Questions = await questionsDatabase.GetItemsAsync();
+                        Questions = await questionsDatabase.GetItemsAsync();
 
                     }
                 }
                 catch (Exception ex)
                 {
-                    Questions = await questionsDatabase.GetItemsAsync();
+               //     Questions = await questionsDatabase.GetItemsAsync();
                 }
             }
             return Questions;
@@ -110,20 +123,24 @@ namespace MauiAppMCQs.Pages
         {
 
 
-           
+
 
             List<InQuestion> res = await GetApiData();
 
             Questions.AddRange(res.Select(r => new Question
-            {Topic=r.Topic,
-                QuestionTitle = r.QuestionTitle, 
+            {
+                Topic = r.Topic,
+                QuestionTitle = r.QuestionTitle,
                 Options = new List<string>() { r.Opt1, r.Opt2, r.Opt3, r.Opt4 },
-                Answer = r.Answer, Time=r.Time
+                Answer = r.Answer,
+                Time = r.Time
             }));
 
             totaltime = Questions.Sum(Question => Convert.ToInt32(Question.Time));
-
+             
+            
         }
 
     }
+       
 }
