@@ -140,7 +140,7 @@ namespace MauiAppMCQs.Pages
 
             totaltime = Questions.Sum(Question => Convert.ToInt32(Question.Time));
 
-            totaltime = totaltime * 60;
+            
         }
 
     }

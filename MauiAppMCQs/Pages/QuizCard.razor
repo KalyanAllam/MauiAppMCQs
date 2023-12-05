@@ -89,11 +89,12 @@
                 </div>
             }
             else
-            { @if ((Questions.Count>0) && (@_currentCount>= (@totaltime) )
+            { @if ((Questions.Count>0) && (@_currentCount>= @totaltime  ))
                 { 
                 @if (  (@score>0) || (@failedIndex > 0))
                 
                 {
+                   
                     <p>You execeeded the total time alloted for this quiz</p>
                 }
                 }
