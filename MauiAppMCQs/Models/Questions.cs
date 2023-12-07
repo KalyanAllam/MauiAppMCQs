@@ -8,6 +8,9 @@ namespace MauiAppMCQs.Models
 {
     public class Question
     {
+
+
+        public int SNo  ;
         public string QuestionTitle { get; set; } = string.Empty;
 
 

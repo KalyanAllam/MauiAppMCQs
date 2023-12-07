@@ -5,11 +5,21 @@
 <div class="container">
     
       <div class="quiz-header">
-           @if (Questions.Count>0)
-           { 
-                <p>Elapsed Time in seconds</p>
-                @_currentCount
-               
+           @if (Questions.Count>0)  
+{ 
+
+          
+
+            @if (@_currentCount <= @totaltime)
+            {
+                  <p>Elapsed Time in seconds</p>
+            @_currentCount
+        }
+        else
+            {
+
+                <p>You execeeded the total time alloted for this quiz</p>
+            }
            }
             </div>
    
@@ -20,10 +30,18 @@
          
         
         @if (questionIndex < Questions.Count())
-        { <div class="quiz-header">
-                
-             <p>Topic</p>
-            
+        {
+            <div class="quiz-header">
+                <p>Question</p>
+                @Questions[questionIndex].SNo
+                <p>of @totalquestions</p>
+            </div>
+
+
+
+
+
+            <div class="quiz-header">
             @Questions[questionIndex].Topic
             </div>
              
@@ -94,8 +112,8 @@
                 @if (  (@score>0) || (@failedIndex > 0))
                 
                 {
-                   
-                    <p>You execeeded the total time alloted for this quiz</p>
+                    
+                    <p>Time Out!</p>
                 }
                 }
                 <div class="quiz-footer">

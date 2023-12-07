@@ -13,8 +13,8 @@ namespace MauiAppMCQs.Pages
         protected int score = 0;
         protected int failedIndex = 0;
         protected string[] failedQuestions = new string[100];
-        public int totaltime;
-       public int _currentCount=0;
+        public int totaltime; public int totalquestions;
+       public int _currentCount=0; 
         private System.Timers.Timer _timer;
       
 
@@ -57,7 +57,10 @@ namespace MauiAppMCQs.Pages
             }
             questionIndex++;
         }
-        protected void TakeQuiz()
+
+        
+
+            protected void TakeQuiz()
         {
             _currentCount = 0;
             score = 0;
@@ -130,18 +133,22 @@ namespace MauiAppMCQs.Pages
             List<InQuestion> res = await GetApiData();
 
             Questions.AddRange(res.Select(r => new Question
-            {
+            {  SNo = r.No,
                 Topic = r.Topic,
                 QuestionTitle = r.QuestionTitle,
                 Options = new List<string>() { r.Opt1, r.Opt2, r.Opt3, r.Opt4 },
                 Answer = r.Answer,
                 Time = r.Time
-            }));
+            })); 
 
             totaltime = Questions.Sum(Question => Convert.ToInt32(Question.Time));
 
-            
+       totalquestions = (from e in res  select e.No).Count();  
+
         }
+
+
+
 
     }
        
