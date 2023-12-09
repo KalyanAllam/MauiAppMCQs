@@ -138,7 +138,7 @@ namespace MauiAppMCQs.Pages
                 QuestionTitle = r.QuestionTitle,
                 Options = new List<string>() { r.Opt1, r.Opt2, r.Opt3, r.Opt4 },
                 Answer = r.Answer,
-                Time = r.Time
+                Time =  r.Time 
             })); 
 
             totaltime = Questions.Sum(Question => Convert.ToInt32(Question.Time));

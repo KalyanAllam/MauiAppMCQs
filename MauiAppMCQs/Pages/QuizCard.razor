@@ -7,13 +7,13 @@
       <div class="quiz-header">
            @if (Questions.Count>0)  
 { 
-
+  
           
 
             @if (@_currentCount <= @totaltime)
             {
-                  <p>Elapsed Time in seconds</p>
-            @_currentCount
+                  <p>Timer </p>
+                @(@totaltime - @_currentCount)
         }
         else
             {
@@ -56,8 +56,8 @@
             </div>
 
             <div class="quiz-header">
-                <p>Total  Time in seconds</p>
-                @totaltime 
+                <p>  Time in Minutes</p>
+                @(@Questions[questionIndex].Time/60)
             </div>
              
         }
