@@ -41,10 +41,11 @@ namespace MauiAppMCQs.Pages
 
         protected void OptionSelected(string option)
         {
+         // Not working
+         //if (option.Trim() == Questions[questionIndex].Options[Questions[questionIndex].Correct])
 
 
-
-            if (option.Trim() == Questions[questionIndex].Answer.Trim())
+                if (option.Trim() == Questions[questionIndex].Answer.Trim())
             {
                 score++;
             }
@@ -138,7 +139,9 @@ namespace MauiAppMCQs.Pages
                 QuestionTitle = r.QuestionTitle,
                 Options = new List<string>() { r.Opt1, r.Opt2, r.Opt3, r.Opt4 },
                 Answer = r.Answer,
-                Time =  r.Time 
+                Time =  r.Time  ,
+                Correct = r.Correct
+
             })); 
 
             totaltime = Questions.Sum(Question => Convert.ToInt32(Question.Time));
