@@ -32,6 +32,12 @@
         @if (questionIndex < Questions.Count())
         {
             <div class="quiz-header">
+                @Questions[questionIndex].Topic
+            </div>
+
+
+
+            <div class="quiz-header">
                 <p>Question</p>
                 @Questions[questionIndex].SNo
                 <p>of @totalquestions</p>
@@ -41,10 +47,7 @@
 
 
 
-            <div class="quiz-header">
-            @Questions[questionIndex].Topic
-            </div>
-             
+            
             <div class="quiz-header">
                 @Questions[questionIndex].QuestionTitle
             </div>

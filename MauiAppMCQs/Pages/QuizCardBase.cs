@@ -41,17 +41,18 @@ namespace MauiAppMCQs.Pages
 
         protected void OptionSelected(string option)
         {
-         // Not working
-         //if (option.Trim() == Questions[questionIndex].Options[Questions[questionIndex].Correct])
+            // Not working
+            //if (option.Trim() == Questions[questionIndex].Options[Questions[questionIndex].Correct])
 
 
-                if (option.Trim() == Questions[questionIndex].Answer.Trim())
+            //  if (option.Trim() == Questions[questionIndex].Answer.Trim())
+            if ((Questions[questionIndex].Options.ToList().IndexOf(option.Trim()) + 1) == Questions[questionIndex].Correct)
             {
                 score++;
             }
             else
             {
-                failedQuestions[failedIndex] = Questions[questionIndex].QuestionTitle + " " + Questions[questionIndex].Answer;
+                failedQuestions[failedIndex] = Questions[questionIndex].QuestionTitle + "  Answer:  " + Questions[questionIndex].Answer;
                 failedIndex++;
 
 
