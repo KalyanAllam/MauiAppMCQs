@@ -36,7 +36,7 @@
         <AppInstallerUri>C:\Users\allam\destination</AppInstallerUri>
         <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
         <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-        <PackageCertificateThumbprint>270ED08E570474AF9849F9913981933EE768CAB4</PackageCertificateThumbprint>
+        <PackageCertificateThumbprint>478164D2B8026BC91C31CB35F0A5537C0B3A2960</PackageCertificateThumbprint>
         <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     </PropertyGroup>
 

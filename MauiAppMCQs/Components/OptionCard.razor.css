@@ -13,3 +13,32 @@
         border-radius: 3px;
         padding: 10px;
     }
+
+
+/* Hide the radio buttons */
+input[type="radio"] {
+    display: none;
+}
+
+/* Style for the labels (simulating dropdown options) */
+label {
+    display: block;
+    padding: 8px;
+    cursor: pointer;
+    margin-bottom: 4px;
+    box-shadow: -0.3px 0.3px 3px rgba(0,0,0,0.3);
+}
+
+/* Style for the selected label */
+input[type="radio"]:checked + label {
+    background-color: #28a745;
+    color: #fff;
+    border-radius: 3px;
+    padding: 10px;
+}
+
+/* Optional: Style for the default label */
+label:hover {
+    background-color: #28a745;
+    color: #fff;
+}

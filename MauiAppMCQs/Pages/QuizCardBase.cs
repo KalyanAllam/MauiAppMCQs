@@ -2,7 +2,8 @@
 using MauiAppMCQs.Models;
 using Newtonsoft.Json;
 using System.Timers;
- 
+using Microsoft.JSInterop;
+
 
 namespace MauiAppMCQs.Pages
 {
@@ -16,8 +17,9 @@ namespace MauiAppMCQs.Pages
         public int totaltime; public int totalquestions;
        public int _currentCount=0; 
         private System.Timers.Timer _timer;
-      
-
+        [Inject]
+        protected IJSRuntime JS { get; set; }  //used to call javascript from .NET method.
+        private string selectedanswer;         //used to store the selected answer.
         QuestionsDatabase questionsDatabase;
 
 
@@ -32,35 +34,45 @@ namespace MauiAppMCQs.Pages
             };
             _timer.Enabled = true;
             //  Uncomment below line if db needs to be loaded
-            //  questionsDatabase = new QuestionsDatabase();
+             questionsDatabase = new QuestionsDatabase();
             LoadQuestionsAsync();
 
             return base.OnInitializedAsync();
         }
 
 
-        protected void OptionSelected(string option)
+        //    protected void OptionSelected(string option)
+        protected async void AnswerSubmit()
         {
-            // Not working
-            //if (option.Trim() == Questions[questionIndex].Options[Questions[questionIndex].Correct])
+            var value = selectedanswer;
+            await JS.InvokeVoidAsync("ClearStatus");  //call the javascript function to clear the radio button status when question changes.
 
-
-            //  if (option.Trim() == Questions[questionIndex].Answer.Trim())
-            if ((Questions[questionIndex].Options.ToList().IndexOf(option.Trim()) + 1) == Questions[questionIndex].Correct)
+            if (value != null)
             {
-                score++;
+                if ((Questions[questionIndex].Options.ToList().IndexOf(selectedanswer.Trim()) + 1) == Questions[questionIndex].Correct)
+                {
+                    score++;
+                }
+                else
+                {
+                    failedQuestions[failedIndex] = Questions[questionIndex].QuestionTitle + "  Answer:  " + Questions[questionIndex].Answer;
+                    failedIndex++;
+
+
+                }
             }
             else
             {
                 failedQuestions[failedIndex] = Questions[questionIndex].QuestionTitle + "  Answer:  " + Questions[questionIndex].Answer;
                 failedIndex++;
-
-
             }
             questionIndex++;
         }
 
-        
+        protected void OptionSelected(string option)
+        {
+            selectedanswer = option.Trim();
+        }
 
             protected void TakeQuiz()
         {
@@ -101,26 +113,26 @@ namespace MauiAppMCQs.Pages
 
                         //comment begins
 
-                        //      List<InQuestion> itemInTheDB = await questionsDatabase.GetItemsAsync();
-                        //        if (itemInTheDB.Count == 0)
-                        //     {
-                        //         foreach (InQuestion item in  Questions)
-                        //         {
-                        //           await questionsDatabase.SaveItemAsync(item);
-                        //         }
-                        //    }
+                             List<InQuestion> itemInTheDB = await questionsDatabase.GetItemsAsync();
+                              if (itemInTheDB.Count == 0)
+                           {
+                                foreach (InQuestion item in  Questions)
+                                 {
+                                   await questionsDatabase.SaveItemAsync(item);
+                                 }
+                          }
                         //comment ends
 
                     }
                     else
                     { // Load  Questions from sql lite  table
-                   //     Questions = await questionsDatabase.GetItemsAsync();
+                       Questions = await questionsDatabase.GetItemsAsync();
 
                     }
                 }
                 catch (Exception ex)
                 {
-               //     Questions = await questionsDatabase.GetItemsAsync();
+                    Questions = await questionsDatabase.GetItemsAsync();
                 }
             }
             return Questions;
