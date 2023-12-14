@@ -13,7 +13,7 @@ namespace MauiAppMCQs.Pages
         protected int questionIndex = 0;
         protected int score = 0;
         protected int failedIndex = 0;
-        protected string[] failedQuestions = new string[100];
+        protected string[] failedQuestions = new string[500];
         public int totaltime; public int totalquestions;
        public int _currentCount=0; 
         private System.Timers.Timer _timer;
