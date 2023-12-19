@@ -13,7 +13,7 @@
             @if (@_currentCount <= @totaltime)
             {
                   
-                @(@totaltime - @_currentCount)
+                @((@totaltime - @_currentCount)/(60) )
         }
         else
             {
@@ -73,7 +73,10 @@
         { 
            
             @if ((Questions.Count>0)&&(@_currentCount< @totaltime))
-            { 
+            {
+                @if (_currentCount > (totaltime)/5) 
+                { 
+
             <div class="app-title">
                 @if (score > (Questions.Count / 1.5))
                 {
@@ -109,7 +112,16 @@
                     </p>
                     
                 }
-            </div>
+                    </div>
+                }
+        else
+                {
+                    <div class="quiz-header">
+                        <b>You had completed the quiz hastily!</b>
+                    </div>
+
+                }
+
                 <div class="quiz-footer">
                     <button class="next-btn" @onclick="@RestartQuiz">Take Quiz</button>
                 </div>
