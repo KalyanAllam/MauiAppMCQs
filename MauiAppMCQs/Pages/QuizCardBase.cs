@@ -19,10 +19,11 @@ namespace MauiAppMCQs.Pages
         private System.Timers.Timer _timer;
         [Inject]
         protected IJSRuntime JS { get; set; }  //used to call javascript from .NET method.
-        private string selectedanswer;         //used to store the selected answer.
+        private string selectedanswer="";         //used to store the selected answer.
         QuestionsDatabase questionsDatabase;
+            public bool IsDisabled = true; 
 
-
+        public string value = "";
         protected override Task OnInitializedAsync()
         {
             _timer = new();
@@ -44,9 +45,10 @@ namespace MauiAppMCQs.Pages
         //    protected void OptionSelected(string option)
         protected async void AnswerSubmit()
         {
-            var value = selectedanswer;
-            await JS.InvokeVoidAsync("ClearStatus");  //call the javascript function to clear the radio button status when question changes.
-
+            IsDisabled=true ; 
+             value = selectedanswer;
+           await JS.InvokeVoidAsync("ClearStatus");  //call the javascript function to clear the radio button status when question changes.
+            
             if (value != null)
             {
                 if ((Questions[questionIndex].Options.ToList().IndexOf(selectedanswer.Trim()) + 1) == Questions[questionIndex].Correct)
@@ -71,6 +73,8 @@ namespace MauiAppMCQs.Pages
 
         protected void OptionSelected(string option)
         {
+                       IsDisabled = false; 
+  ;
             selectedanswer = option.Trim();
         }
 

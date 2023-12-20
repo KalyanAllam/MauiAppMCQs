@@ -52,14 +52,16 @@
                 @Questions[questionIndex].QuestionTitle 
             </div>
 
-
-              <div class="quiz-header">
-                <button class="btn btn-primary" @onclick="AnswerSubmit">Submit</button>
-                   </div>
+            
+                <div class="quiz-header">
+                <button class="btn btn-primary" disabled=@(IsDisabled) @onclick="AnswerSubmit">Submit</button>
+            </div>
+           
             <div class="quiz-body">
                  @foreach (var option in Questions[questionIndex].Options)
                 {
-                    <OptionCard Option="@option" OnOptionSelected="OptionSelected"></OptionCard>
+                    
+                    <OptionCard Option="@option" OnOptionSelected="OptionSelected" ></OptionCard>
                 }
             </div>
 
@@ -74,8 +76,7 @@
            
             @if ((Questions.Count>0)&&(@_currentCount< @totaltime))
             {
-                @if (_currentCount > (totaltime)/5) 
-                { 
+                
 
             <div class="app-title">
                 @if (score > (Questions.Count / 1.5))
@@ -113,14 +114,7 @@
                     
                 }
                     </div>
-                }
-        else
-                {
-                    <div class="quiz-header">
-                        <b>You had completed the quiz hastily!</b>
-                    </div>
-
-                }
+                
 
                 <div class="quiz-footer">
                     <button class="next-btn" @onclick="@RestartQuiz">Take Quiz</button>

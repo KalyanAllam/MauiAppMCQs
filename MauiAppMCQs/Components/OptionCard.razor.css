@@ -16,10 +16,12 @@
 
 
 /* Hide the radio buttons */
-input[type="radio"] {
-    display: none;
-}
 
+ 
+ input[type="radio"] { 
+      display: none; 
+ } 
+ 
 /* Style for the labels (simulating dropdown options) */
 label {
     display: block;
@@ -41,4 +43,5 @@ input[type="radio"]:checked + label {
 label:hover {
     background-color: #28a745;
     color: #fff;
+    
 }
