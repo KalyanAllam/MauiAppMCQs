@@ -21,5 +21,6 @@ namespace MauiAppMCQs.Models
 
         public int Time    ;
         public int Correct;
+        public string Solution { get; set; } = string.Empty;
     }
 }

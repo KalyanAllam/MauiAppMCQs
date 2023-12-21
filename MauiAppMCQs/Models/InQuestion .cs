@@ -33,5 +33,7 @@ namespace MauiAppMCQs.Models
 
         public int Correct;
 
+        public string Solution;
+
     }
 }

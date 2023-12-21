@@ -57,7 +57,7 @@ namespace MauiAppMCQs.Pages
                 }
                 else
                 {
-                    failedQuestions[failedIndex] = Questions[questionIndex].QuestionTitle + "  Answer:  " + Questions[questionIndex].Answer;
+                    failedQuestions[failedIndex] = Questions[questionIndex].QuestionTitle + "  Answer:  " + Questions[questionIndex].Answer + "  Solution:  " + Questions[questionIndex].Solution;
                     failedIndex++;
 
 
@@ -65,7 +65,7 @@ namespace MauiAppMCQs.Pages
             }
             else
             {
-                failedQuestions[failedIndex] = Questions[questionIndex].QuestionTitle + "  Answer:  " + Questions[questionIndex].Answer;
+                failedQuestions[failedIndex] = Questions[questionIndex].QuestionTitle + "  Answer:  " + Questions[questionIndex].Answer + "  Solution:  " + Questions[questionIndex].Solution;
                 failedIndex++;
             }
             questionIndex++;
@@ -157,7 +157,8 @@ namespace MauiAppMCQs.Pages
                 Options = new List<string>() { r.Opt1, r.Opt2, r.Opt3, r.Opt4 },
                 Answer = r.Answer,
                 Time =  r.Time  ,
-                Correct = r.Correct
+                Correct = r.Correct,
+                Solution = r.Solution
 
             })); 
 
