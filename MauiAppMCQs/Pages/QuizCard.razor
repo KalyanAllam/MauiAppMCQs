@@ -12,8 +12,9 @@
 
             @if (@_currentCount <= @totaltime)
             {
+                <p>Total Time:</p>
                   
-                @((@totaltime - @_currentCount)/(60) )
+                @((60+@totaltime - @_currentCount)/(60)   )
         }
         else
             {
@@ -39,8 +40,9 @@
 
             <div class="quiz-header">
                 <p>Question</p>
-                @Questions[questionIndex].SNo
-                <p>of @totalquestions</p>
+                 @Questions[questionIndex].SNo 
+                 <p>Of</p>
+                <p>  @totalquestions</p>
             </div>
 
 

@@ -35,7 +35,7 @@ namespace MauiAppMCQs.Pages
             };
             _timer.Enabled = true;
             //  Uncomment below line if db needs to be loaded
-          ///   questionsDatabase = new QuestionsDatabase();
+             questionsDatabase = new QuestionsDatabase();
             LoadQuestionsAsync();
 
             return base.OnInitializedAsync();
@@ -57,7 +57,7 @@ namespace MauiAppMCQs.Pages
                 }
                 else
                 {
-                    failedQuestions[failedIndex] = Questions[questionIndex].QuestionTitle + "  Answer:  " + Questions[questionIndex].Answer + "  Solution:  " + Questions[questionIndex].Solution;
+                    failedQuestions[failedIndex] = Questions[questionIndex].QuestionTitle + "  Answer:  "  + Questions[questionIndex].Answer + "  Solution:  " + Questions[questionIndex].Solution;
                     failedIndex++;
 
 
@@ -94,7 +94,8 @@ namespace MauiAppMCQs.Pages
         }
         async Task<List<InQuestion>> GetApiData()
         {
-            string apiUrl = "https://sheet2api.com/v1/UHC796KdSvqC/testsp";
+             string apiUrl = "https://sheet2api.com/v1/UHC796KdSvqC/testsp";
+         //   string apiUrl = "https://quizzingapi.azurewebsites.net/api/Questions"; 
             List<InQuestion> Questions = new List<InQuestion>();
             using (HttpClient client = new HttpClient())
             {
@@ -117,26 +118,26 @@ namespace MauiAppMCQs.Pages
 
                         //comment begins
 
-                         //    List<InQuestion> itemInTheDB = await questionsDatabase.GetItemsAsync();
-                         //     if (itemInTheDB.Count == 0)
-                        //   {
-                         //       foreach (InQuestion item in  Questions)
-                         //        {
-                          //         await questionsDatabase.SaveItemAsync(item);
-                          //       }
-                       //   }
+                            List<InQuestion> itemInTheDB = await questionsDatabase.GetItemsAsync();
+                            if (itemInTheDB.Count == 0)
+                          {
+                               foreach (InQuestion item in  Questions)
+                                {
+                                  await questionsDatabase.SaveItemAsync(item);
+                                 }
+                           }
                         //comment ends
 
                     }
                     else
                     { // Load  Questions from sql lite  table
-                  //     Questions = await questionsDatabase.GetItemsAsync();
+                       Questions = await questionsDatabase.GetItemsAsync();
 
                     }
                 }
                 catch (Exception ex)
                 {
-                 //   Questions = await questionsDatabase.GetItemsAsync();
+                    Questions = await questionsDatabase.GetItemsAsync();
                 }
             }
             return Questions;
@@ -165,7 +166,8 @@ namespace MauiAppMCQs.Pages
             totaltime = Questions.Sum(Question => Convert.ToInt32(Question.Time));
 
        totalquestions = (from e in res  select e.No).Count();  
-
+        
+            Questions= Questions.OrderByDescending(s => s.SNo).ToList();
         }
 
 
