@@ -11,8 +11,8 @@ namespace MauiAppMCQs.Models
 
 
     {
-
-     public int  No { get; set; }
+        public int SNo { get; set; }
+        public int  No { get; set; }
 
         public string Topic { get; set; }
 

@@ -95,7 +95,7 @@ namespace MauiAppMCQs.Pages
         async Task<List<InQuestion>> GetApiData()
         {
              string apiUrl = "https://sheet2api.com/v1/UHC796KdSvqC/testsp";
-         //   string apiUrl = "https://quizzingapi.azurewebsites.net/api/Questions"; 
+        //  string apiUrl = "https://quizzingapi.azurewebsites.net/api/Questions"; 
             List<InQuestion> Questions = new List<InQuestion>();
             using (HttpClient client = new HttpClient())
             {
