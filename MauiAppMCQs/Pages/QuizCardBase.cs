@@ -121,13 +121,13 @@ namespace MauiAppMCQs.Pages
                         //comment begins
 
                             List<InQuestion> itemInTheDB = await questionsDatabase.GetItemsAsync();
-                            if (itemInTheDB.Count == 0)
-                         {
+                        //    if (itemInTheDB.Count == 0)
+                        // {
                               foreach (InQuestion item in  Questions)
                                {
                                   await questionsDatabase.SaveItemAsync(item);
-                                }
-                            }
+                               }
+                         //   }
                         //comment ends
 
                     }
