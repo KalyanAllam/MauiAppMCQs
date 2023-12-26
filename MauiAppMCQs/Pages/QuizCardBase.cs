@@ -35,7 +35,7 @@ namespace MauiAppMCQs.Pages
             };
             _timer.Enabled = true;
             //  Uncomment below line if db needs to be loaded
-             questionsDatabase = new QuestionsDatabase();
+            questionsDatabase = new QuestionsDatabase();
             LoadQuestionsAsync();
 
             return base.OnInitializedAsync();
@@ -94,19 +94,21 @@ namespace MauiAppMCQs.Pages
         }
         async Task<List<InQuestion>> GetApiData()
         {
-             string apiUrl = "https://sheet2api.com/v1/UHC796KdSvqC/testsp";
-        //  string apiUrl = "https://quizzingapi.azurewebsites.net/api/Questions"; 
+         //    string apiUrl = "https://sheet2api.com/v1/UHC796KdSvqC/testsp";
+           string apiUrl = "https://quizzingapi.azurewebsites.net/api/Questions"; 
             List<InQuestion> Questions = new List<InQuestion>();
+            string connected = "N";
             using (HttpClient client = new HttpClient())
             {
                 try
                 {
                     // Make a GET request to the API
                     HttpResponseMessage response = await client.GetAsync(apiUrl);
-
+               
                     // Check if the request was successful (status code 200)
                     if (response.IsSuccessStatusCode)
                     {
+                        connected = "Y";
                         // Read the content of the response
                         string jsonString = await response.Content.ReadAsStringAsync();
 
@@ -120,24 +122,30 @@ namespace MauiAppMCQs.Pages
 
                             List<InQuestion> itemInTheDB = await questionsDatabase.GetItemsAsync();
                             if (itemInTheDB.Count == 0)
-                          {
-                               foreach (InQuestion item in  Questions)
-                                {
+                         {
+                              foreach (InQuestion item in  Questions)
+                               {
                                   await questionsDatabase.SaveItemAsync(item);
-                                 }
-                           }
+                                }
+                            }
                         //comment ends
 
                     }
                     else
                     { // Load  Questions from sql lite  table
-                       Questions = await questionsDatabase.GetItemsAsync();
+                      Questions = await questionsDatabase.GetItemsAsync();
 
                     }
                 }
                 catch (Exception ex)
                 {
-                    Questions = await questionsDatabase.GetItemsAsync();
+                    if (connected == "N")
+                    {
+                        Questions = await questionsDatabase.GetItemsAsync();
+
+                    }
+
+                    
                 }
             }
             return Questions;

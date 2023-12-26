@@ -1,6 +1,6 @@
 ﻿using MauiAppMCQs.Data;
 using Microsoft.Extensions.Logging;
-
+using MauiAppMCQs.Models;
 namespace MauiAppMCQs
 {
     public static class MauiProgram
@@ -23,6 +23,9 @@ namespace MauiAppMCQs
 #endif
 
             builder.Services.AddSingleton<WeatherForecastService>();
+
+
+            builder.Services.AddSingleton<QuestionsDatabase>();
 
             return builder.Build();
         }

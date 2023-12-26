@@ -59,6 +59,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Compile Remove="Models\QuestionDatabase - Copy.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
       <Content Remove="Pages\QuizCard.razor" />
     </ItemGroup>
 
@@ -66,6 +70,7 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
+        <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.7" />
     </ItemGroup>
 
     <ItemGroup>

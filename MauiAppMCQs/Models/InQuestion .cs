@@ -28,12 +28,12 @@ namespace MauiAppMCQs.Models
 
         public string Answer { get; set; }
 
-        public int Time;
+        public int Time { get; set; }
 
 
-        public int Correct;
+        public int Correct { get; set; }
 
-        public string Solution;
+        public string Solution { get; set; }
 
     }
 }
