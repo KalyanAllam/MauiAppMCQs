@@ -123,7 +123,14 @@ namespace MauiAppMCQs.Pages
                             List<InQuestion> itemInTheDB = await questionsDatabase.GetItemsAsync();
                         //    if (itemInTheDB.Count == 0)
                         // {
-                              foreach (InQuestion item in  Questions)
+
+
+                        foreach (InQuestion item in itemInTheDB)
+                        {
+                            await questionsDatabase.DeleteItemAsync(item);
+                        }
+
+                        foreach (InQuestion item in  Questions)
                                {
                                   await questionsDatabase.SaveItemAsync(item);
                                }

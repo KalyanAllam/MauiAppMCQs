@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using SQLite;
  
 namespace MauiAppMCQs.Models
@@ -52,5 +53,8 @@ namespace MauiAppMCQs.Models
             await Init();
             return await Database.DeleteAsync(item);
         }
+
+
+        
     }
 }

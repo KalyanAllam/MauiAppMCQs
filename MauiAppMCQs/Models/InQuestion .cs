@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLite;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,7 @@ namespace MauiAppMCQs.Models
 
 
     {
+        [PrimaryKey]
         public int SNo { get; set; }
         public int  No { get; set; }
 
