@@ -4,11 +4,14 @@ using Newtonsoft.Json;
 using System.Timers;
 using Microsoft.JSInterop;
 
+using System.Text;
+using System.Net.Http.Headers;
 
 namespace MauiAppMCQs.Pages
 {
     public class QuizCardBase : ComponentBase
     {
+        public string code;
         public List<Question> Questions { get; set; } = new List<Question>();
         protected int questionIndex = 0;
         protected int score = 0;
@@ -94,20 +97,88 @@ namespace MauiAppMCQs.Pages
         }
         async Task<List<InQuestion>> GetApiData()
         {
-         //    string apiUrl = "https://sheet2api.com/v1/UHC796KdSvqC/testsp";
-           string apiUrl = "https://quizzingapi.azurewebsites.net/api/Questions"; 
+        //    string apiUrl = "https://sheet2api.com/v1/UHC796KdSvqC/testsp";
+       
+
+            string jwturl = "https://quizapijwt.azurewebsites.net/api/";
             List<InQuestion> Questions = new List<InQuestion>();
-            string connected = "N";
+             
+
+            using (var client1 = new HttpClient())
+            {
+                try
+                {
+                    
+                    var postData = new PostData
+                    {
+                        Name = "",
+
+                        Password = ""
+                    };
+                    var jsonpost = System.Text.Json.JsonSerializer.Serialize(postData);
+                    var content = new StringContent(jsonpost, Encoding.UTF8, "application/json");
+                    client1.BaseAddress = new Uri(jwturl);
+
+                    client1.DefaultRequestHeaders.Clear();
+                    client1.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    HttpResponseMessage Res = await client1.PostAsync("Auth", content);
+
+                    if (Res.IsSuccessStatusCode)
+                    {
+                        //Storing the response details recieved from web api   
+                        string json = await Res.Content.ReadAsStringAsync();
+
+                        // Parse the JSON response to extract the address
+                        dynamic data1 = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+                        code = data1.token;
+
+
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                     
+
+                }
+
+            }
+
+
+
+
+
+
+
+
+
+
+
+            string connected  = "N";
+
+
+
+            string apiUrl = "https://quizapijwt.azurewebsites.net/api/";
+       
             using (HttpClient client = new HttpClient())
             {
                 try
                 {
                     // Make a GET request to the API
-                    HttpResponseMessage response = await client.GetAsync(apiUrl);
-               
+                    //    HttpResponseMessage response = await client.GetAsync(apiUrl);
+                    client.BaseAddress = new Uri(apiUrl);
+                    client.DefaultRequestHeaders.Clear();
+                    //Define request data format  
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {code}");
+                    HttpResponseMessage response = await client.GetAsync("Questions");
                     // Check if the request was successful (status code 200)
                     if (response.IsSuccessStatusCode)
                     {
+                       
+                        // Make a GET request to the API
+                      
                         connected = "Y";
                         // Read the content of the response
                         string jsonString = await response.Content.ReadAsStringAsync();
@@ -124,10 +195,15 @@ namespace MauiAppMCQs.Pages
                         //    if (itemInTheDB.Count == 0)
                         // {
 
-
+                        int existsdb;
                         foreach (InQuestion item in itemInTheDB)
                         {
-                            await questionsDatabase.DeleteItemAsync(item);
+                            var result = Questions.First(c => c.SNo == item.SNo);
+
+                            if (result == null)
+                            {
+                                await questionsDatabase.DeleteItemAsync(item);
+                            }
                         }
 
                         foreach (InQuestion item in  Questions)

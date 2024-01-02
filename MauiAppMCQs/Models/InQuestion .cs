@@ -13,6 +13,8 @@ namespace MauiAppMCQs.Models
 
     {
         [PrimaryKey]
+     
+
         public int SNo { get; set; }
         public int  No { get; set; }
 
