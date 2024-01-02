@@ -24,8 +24,8 @@ namespace MauiAppMCQs.Pages
         protected IJSRuntime JS { get; set; }  //used to call javascript from .NET method.
         private string selectedanswer="";         //used to store the selected answer.
         QuestionsDatabase questionsDatabase;
-            public bool IsDisabled = true; 
-
+            public bool IsDisabled = true;
+        public string matches;
         public string value = "";
         protected override Task OnInitializedAsync()
         {
@@ -195,10 +195,10 @@ namespace MauiAppMCQs.Pages
                         //    if (itemInTheDB.Count == 0)
                         // {
 
-                        int existsdb;
+                        
                         foreach (InQuestion item in itemInTheDB)
                         {
-                            var result = Questions.First(c => c.SNo == item.SNo);
+                            var result = Questions.FirstOrDefault(c => c.SNo == item.SNo);
 
                             if (result == null)
                             {
@@ -206,9 +206,29 @@ namespace MauiAppMCQs.Pages
                             }
                         }
 
-                        foreach (InQuestion item in  Questions)
+                        foreach (InQuestion itemdb in  Questions)
                                {
-                                  await questionsDatabase.SaveItemAsync(item);
+                            var resulty = itemInTheDB.FirstOrDefault(c => c.SNo == itemdb.SNo);
+                            matches = "N";
+
+
+                            if(resulty == null)
+                            { await questionsDatabase.SaveItemAsync(itemdb); }
+
+
+                            if (resulty != null)
+                            {
+                                if ((resulty.No == itemdb.No) && (resulty.Opt1 == itemdb.Opt1) && (resulty.Opt2 == itemdb.Opt2) && (resulty.Opt3 == itemdb.Opt3) && (resulty.Opt4 == itemdb.Opt4)
+                                 && (resulty.QuestionTitle == itemdb.QuestionTitle) && (resulty.Solution == itemdb.Solution) && (resulty.Time == itemdb.Time) && (resulty.Answer == itemdb.Answer)
+                                 && (resulty.Topic == itemdb.Topic))
+                                { matches = "Y"; }
+
+                            }
+                            else
+                            { await questionsDatabase.SaveItemAsync(itemdb); }
+                            if(matches == "N")
+                            { await questionsDatabase.SaveItemAsync(itemdb); }
+                           
                                }
                          //   }
                         //comment ends
