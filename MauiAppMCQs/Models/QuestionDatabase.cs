@@ -17,6 +17,8 @@ namespace MauiAppMCQs.Models
         {  
         string dbPath  =
          Path.Combine(FileSystem.AppDataDirectory, DatabaseFilename);
+          FileStream fileStream = new FileStream(dbPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+
             _dbConnection = new SQLiteAsyncConnection(dbPath);
             if (Database is not null)
                 return;
