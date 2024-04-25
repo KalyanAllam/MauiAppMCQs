@@ -1,0 +1,357 @@
+﻿@using System.Text;
+@using System.Net.Http.Headers;
+@using Microsoft.AspNetCore.Components;
+@using Newtonsoft.Json;
+@using System.Timers;
+@using MauiAppMCQs.Models;
+
+@page "/QuizApp"
+
+<PageTitle>QuizApp</PageTitle>
+
+@if (Questions.ToList().Count <= 0)
+{
+
+    <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+}
+
+
+@if (Questions.ToList().Count > 0)
+{
+    <button class="btn btn-primary" @onclick="NextQuestion">Next Question</button>
+
+
+}
+<p role="status">@Topich</p>
+<p role="status">@Topic</p>
+@if (Questions.ToList().Count > 0)
+{
+    @number
+    @filler
+    @maxnumber
+}
+
+<p role="status">@QuestionTitleh</p>
+
+<p role="status">@QuestionTitle</p>
+<p role="status">@Answerh</p>
+
+<p role="status">@Answer</p>
+
+@if (Questions.ToList().Count > 0)
+{
+
+    <button class="btn btn-primary" @onclick="ToggleAnswer">@buttonText</button>
+
+    <p style="display:@display">@solutionh</p>
+    <p style="display:@display">@solution</p>
+
+}
+
+
+
+<p role="status">@errormessage</p>
+@code {
+
+
+
+
+
+
+
+
+    //   using Communication = Microsoft.Maui.ApplicationModel.Communication;
+    private string activity = "";
+    public string code; public string errortoggle = ""; public string errormessage = ""; public string checkflag = "N";
+    public string matches;
+    QuestionsDatabase questionsDatabase;
+    public int number;
+    public List<Question> Questions { get; set; } = new List<Question>();
+    protected int questionIndex = 0;
+    protected int score = 0;
+    protected int failedIndex = 0;
+    protected string[] failedQuestions = new string[500];
+    public int totaltime; public int totalquestions;
+    public int _currentCount = 0; public int _currentMin = 0;
+    private System.Timers.Timer _timer;
+    public int maxnumber; public int minumber; public string solution; public string Topic; public string QuestionTitle;
+    public string Answer;
+    bool isInitialized = false;
+    string solutionh;
+
+    string Topich;
+
+    string QuestionTitleh;
+
+    string Answerh;
+
+    List<InQuestion> res;
+    private string display = "none";
+    private string buttonText = "Hide Solution";
+    public int range;
+    string filler = "/";
+
+
+    private void ToggleAnswer()
+    {
+        string bypass = "N";
+
+        if (_currentCount > 3000)
+        {
+            bypass = "Y";
+            errormessage = "";
+
+        }
+        else
+        { errormessage = "Cannot Show Solution until 5 minutes"; }
+        if (bypass == "Y")
+        {
+            if (display == "none")
+            {
+                display = "block";
+                buttonText = "Hide Solution";
+
+            }
+            else
+            {
+                checkflag = "Y";
+                display = "none";
+                buttonText = "Show Solution";
+            }
+        }
+    }
+    private void NextQuestion()
+    {
+
+
+
+
+
+
+
+
+
+        if (checkflag == "N")
+        { errormessage = "Show/Hide Solution to move to next question"; }
+        else
+        {
+            _currentCount = 0;
+            _timer = new();
+            _timer.Interval = 1000;
+            _timer.Elapsed += async (object? sender, ElapsedEventArgs e) =>
+            {
+                _currentCount++;
+                await InvokeAsync(StateHasChanged);
+            };
+            _timer.Enabled = true;
+            questionsDatabase = new QuestionsDatabase();
+            LoadQuestionsAsync();
+
+            checkflag = "N";
+            errormessage = " ";
+        }
+
+
+
+
+    }
+    private void IncrementCount()
+    {
+        _currentCount = 0;
+        _timer = new();
+        _timer.Interval = 1000;
+        _timer.Elapsed += async (object? sender, ElapsedEventArgs e) =>
+        {
+            _currentCount++;
+            await InvokeAsync(StateHasChanged);
+        };
+        _timer.Enabled = true;
+
+
+
+
+
+        questionsDatabase = new QuestionsDatabase();
+        LoadQuestionsAsync();
+
+
+
+
+
+
+
+
+    }
+    async Task<List<InQuestion>> GetApiData()
+    {
+
+
+
+        string jwturl = "https://supaquizapi.azurewebsites.net/api/";
+        List<InQuestion> Questions = new List<InQuestion>();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        string connected = "N";
+
+
+
+        string apiUrl = "https://supaquizapi.azurewebsites.net/api/";
+
+        using (HttpClient client = new HttpClient())
+        {
+            try
+            {
+                // Make a GET request to the API
+                //    HttpResponseMessage response = await client.GetAsync(apiUrl);
+                questionsDatabase = new QuestionsDatabase();
+                client.BaseAddress = new Uri(apiUrl);
+
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage response = null;
+                response = await client.GetAsync("Questions");
+                // Check if the request was successful (status code 200)
+                if (response.IsSuccessStatusCode)
+                {
+
+
+                    // Make a GET request to the API
+
+                    connected = "Y";
+                    // Read the content of the response
+                    string jsonString = await response.Content.ReadAsStringAsync();
+
+
+                    // Deserialize the JSON string into an object
+                    Questions = JsonConvert.DeserializeObject<List<InQuestion>>(jsonString);
+                    // truncate sqlLIte table Load sqlite table  from  Questions
+                    //If the first time when you load the api data, it will push data to the sqlite DB.
+
+                    //comment begins
+
+                    List<InQuestion> itemInTheDB = await questionsDatabase.GetItemsAsync();
+                    //    if (itemInTheDB.Count == 0)
+                    // {
+
+
+                    foreach (InQuestion item in itemInTheDB)
+                    {
+                        var result = Questions.FirstOrDefault(c => c.SNo == item.SNo);
+
+                        if (result == null)
+                        {
+                            await questionsDatabase.DeleteItemAsync(item);
+                        }
+                    }
+
+                    foreach (InQuestion itemdb in Questions)
+                    {
+                        var resulty = itemInTheDB.FirstOrDefault(c => c.SNo == itemdb.SNo);
+                        matches = "N";
+
+
+                        if (resulty == null)
+                        { await questionsDatabase.SaveItemAsync(itemdb); }
+
+
+                        if (resulty != null)
+                        {
+                            if ((resulty.No == itemdb.No) && (resulty.Opt1 == itemdb.Opt1) && (resulty.Opt2 == itemdb.Opt2) && (resulty.Opt3 == itemdb.Opt3) && (resulty.Opt4 == itemdb.Opt4)
+                             && (resulty.QuestionTitle == itemdb.QuestionTitle) && (resulty.Solution == itemdb.Solution) && (resulty.Time == itemdb.Time) && (resulty.Answer == itemdb.Answer)
+                             && (resulty.Topic == itemdb.Topic))
+                            { matches = "Y"; }
+
+                        }
+                        else
+                        { await questionsDatabase.SaveItemAsync(itemdb); }
+                        if (matches == "N")
+                        { await questionsDatabase.SaveItemAsync(itemdb); }
+
+                    }
+                    //   }
+                    //comment ends
+
+                }
+                else
+                { // Load  Questions from sql lite  table
+                    Questions = await questionsDatabase.GetItemsAsync();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                if (connected == "N")
+                {
+                    Questions = await questionsDatabase.GetItemsAsync();
+
+                }
+
+
+            }
+        }
+        return Questions;
+    }
+
+    private async Task LoadQuestionsAsync()
+    {
+
+        display = "none";
+        buttonText = "Show Solution";
+
+        if (!isInitialized)
+        {
+
+            res = await GetApiData();
+
+
+
+
+
+            Questions.AddRange(res.Select(r => new Question
+                {
+                    SNo = r.No,
+                    Topic = r.Topic,
+                    QuestionTitle = r.QuestionTitle,
+                    Options = new List<string>() { r.Opt1, r.Opt2, r.Opt3, r.Opt4 },
+                    Answer = r.Answer,
+                    Time = r.Time,
+                    Correct = r.Correct,
+                    Solution = r.Solution
+
+                }));
+            isInitialized = true;
+
+        }
+        maxnumber = (from e in res select e.No).Max();
+        minumber = (from e in res select e.No).Min();
+        range = maxnumber + 1;
+        Questions = Questions.OrderByDescending(s => s.SNo).ToList();
+
+
+        Random rand = new Random();
+        number = rand.Next(minumber, range);
+        var result = Questions.FirstOrDefault(c => c.SNo == number);
+        solution = result.Solution;
+        solutionh = "Solution";
+        Topic = result.Topic;
+        Topich = "Topic";
+        QuestionTitle = result.QuestionTitle;
+        QuestionTitleh = "QuestionTitle";
+        Answer = result.Answer;
+        Answerh = "Answer";
+    }
+
+
+}

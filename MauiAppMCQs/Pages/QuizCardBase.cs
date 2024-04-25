@@ -6,6 +6,7 @@ using Microsoft.JSInterop;
 
 using System.Text;
 using System.Net.Http.Headers;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MauiAppMCQs.Pages
 {
@@ -18,13 +19,13 @@ namespace MauiAppMCQs.Pages
         protected int failedIndex = 0;
         protected string[] failedQuestions = new string[500];
         public int totaltime; public int totalquestions;
-       public int _currentCount=0;  
+        public int _currentCount = 0;
         private System.Timers.Timer _timer;
         [Inject]
         protected IJSRuntime JS { get; set; }  //used to call javascript from .NET method.
-        private string selectedanswer="";         //used to store the selected answer.
+        private string selectedanswer = "";         //used to store the selected answer.
         QuestionsDatabase questionsDatabase;
-            public bool IsDisabled = true;
+        public bool IsDisabled = true;
         public string matches;
         public string value = "";
         protected override Task OnInitializedAsync()
@@ -48,10 +49,10 @@ namespace MauiAppMCQs.Pages
         //    protected void OptionSelected(string option)
         protected async void AnswerSubmit()
         {
-            IsDisabled=true ; 
-             value = selectedanswer;
-           await JS.InvokeVoidAsync("ClearStatus");  //call the javascript function to clear the radio button status when question changes.
-            
+            IsDisabled = true;
+            value = selectedanswer;
+            await JS.InvokeVoidAsync("ClearStatus");  //call the javascript function to clear the radio button status when question changes.
+
             if (value != null)
             {
                 if ((Questions[questionIndex].Options.ToList().IndexOf(selectedanswer.Trim()) + 1) == Questions[questionIndex].Correct)
@@ -60,7 +61,7 @@ namespace MauiAppMCQs.Pages
                 }
                 else
                 {
-                    failedQuestions[failedIndex] = Questions[questionIndex].QuestionTitle + "  Answer:  "  + Questions[questionIndex].Answer + "  Solution:  " + Questions[questionIndex].Solution;
+                    failedQuestions[failedIndex] = Questions[questionIndex].QuestionTitle + "  Answer:  " + Questions[questionIndex].Answer + "  Solution:  " + Questions[questionIndex].Solution;
                     failedIndex++;
 
 
@@ -76,12 +77,12 @@ namespace MauiAppMCQs.Pages
 
         protected void OptionSelected(string option)
         {
-                       IsDisabled = false; 
-  ;
+            IsDisabled = false;
+            ;
             selectedanswer = option.Trim();
         }
 
-            protected void TakeQuiz()
+        protected void TakeQuiz()
         {
             _currentCount = 0;
             score = 0;
@@ -97,53 +98,11 @@ namespace MauiAppMCQs.Pages
         }
         async Task<List<InQuestion>> GetApiData()
         {
-        //    string apiUrl = "https://sheet2api.com/v1/UHC796KdSvqC/testsp";
-       
+            //    string apiUrl = "https://sheet2api.com/v1/UHC796KdSvqC/testsp";
 
-            string jwturl = "https://quizapijwt.azurewebsites.net/api/";
+
+            string jwturl = "https://supaquizapi.azurewebsites.net/api/";
             List<InQuestion> Questions = new List<InQuestion>();
-             
-
-            using (var client1 = new HttpClient())
-            {
-                try
-                {
-                    
-                    var postData = new PostData
-                    {
-                        Name = "",
-
-                        Password = ""
-                    };
-                    var jsonpost = System.Text.Json.JsonSerializer.Serialize(postData);
-                    var content = new StringContent(jsonpost, Encoding.UTF8, "application/json");
-                    client1.BaseAddress = new Uri(jwturl);
-
-                    client1.DefaultRequestHeaders.Clear();
-                    client1.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                    HttpResponseMessage Res = await client1.PostAsync("Auth", content);
-
-                    if (Res.IsSuccessStatusCode)
-                    {
-                        //Storing the response details recieved from web api   
-                        string json = await Res.Content.ReadAsStringAsync();
-
-                        // Parse the JSON response to extract the address
-                        dynamic data1 = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
-                        code = data1.token;
-
-
-
-                    }
-                }
-                catch (Exception ex)
-                {
-                     
-
-                }
-
-            }
 
 
 
@@ -155,30 +114,33 @@ namespace MauiAppMCQs.Pages
 
 
 
-            string connected  = "N";
 
 
 
-            string apiUrl = "https://quizapijwt.azurewebsites.net/api/";
-       
+            string connected = "N";
+
+
+
+            string apiUrl = "https://supaquizapi.azurewebsites.net/api/";
+
             using (HttpClient client = new HttpClient())
             {
                 try
                 {
                     // Make a GET request to the API
                     //    HttpResponseMessage response = await client.GetAsync(apiUrl);
-                    client.BaseAddress = new Uri(apiUrl);
+                    client.BaseAddress = new Uri(jwturl);
+
                     client.DefaultRequestHeaders.Clear();
-                    //Define request data format  
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {code}");
-                    HttpResponseMessage response = await client.GetAsync("Questions");
+                    HttpResponseMessage response = null;
+
                     // Check if the request was successful (status code 200)
                     if (response.IsSuccessStatusCode)
                     {
-                       
+                        response = await client.GetAsync("Questions");
                         // Make a GET request to the API
-                      
+
                         connected = "Y";
                         // Read the content of the response
                         string jsonString = await response.Content.ReadAsStringAsync();
@@ -191,11 +153,11 @@ namespace MauiAppMCQs.Pages
 
                         //comment begins
 
-                            List<InQuestion> itemInTheDB = await questionsDatabase.GetItemsAsync();
+                        List<InQuestion> itemInTheDB = await questionsDatabase.GetItemsAsync();
                         //    if (itemInTheDB.Count == 0)
                         // {
 
-                        
+
                         foreach (InQuestion item in itemInTheDB)
                         {
                             var result = Questions.FirstOrDefault(c => c.SNo == item.SNo);
@@ -206,13 +168,13 @@ namespace MauiAppMCQs.Pages
                             }
                         }
 
-                        foreach (InQuestion itemdb in  Questions)
-                               {
+                        foreach (InQuestion itemdb in Questions)
+                        {
                             var resulty = itemInTheDB.FirstOrDefault(c => c.SNo == itemdb.SNo);
                             matches = "N";
 
 
-                            if(resulty == null)
+                            if (resulty == null)
                             { await questionsDatabase.SaveItemAsync(itemdb); }
 
 
@@ -226,17 +188,17 @@ namespace MauiAppMCQs.Pages
                             }
                             else
                             { await questionsDatabase.SaveItemAsync(itemdb); }
-                            if(matches == "N")
+                            if (matches == "N")
                             { await questionsDatabase.SaveItemAsync(itemdb); }
-                           
-                               }
-                         //   }
+
+                        }
+                        //   }
                         //comment ends
 
                     }
                     else
                     { // Load  Questions from sql lite  table
-                      Questions = await questionsDatabase.GetItemsAsync();
+                        Questions = await questionsDatabase.GetItemsAsync();
 
                     }
                 }
@@ -248,7 +210,7 @@ namespace MauiAppMCQs.Pages
 
                     }
 
-                    
+
                 }
             }
             return Questions;
@@ -259,31 +221,60 @@ namespace MauiAppMCQs.Pages
 
 
 
-
             List<InQuestion> res = await GetApiData();
 
+
+
+
+
+
+
             Questions.AddRange(res.Select(r => new Question
-            {  SNo = r.No,
+            {
+                SNo = r.No,
                 Topic = r.Topic,
                 QuestionTitle = r.QuestionTitle,
                 Options = new List<string>() { r.Opt1, r.Opt2, r.Opt3, r.Opt4 },
                 Answer = r.Answer,
-                Time =  r.Time  ,
+                Time = r.Time,
                 Correct = r.Correct,
                 Solution = r.Solution
 
-            })); 
+            }));
+            int maxnumber = (from e in Questions select e.SNo).Max();
+            int minumber = (from e in Questions select e.SNo).Min();
+            int range = maxnumber + 1;
+            string stopflag = "Y";
+
+            while (stopflag == "Y")
+            {
+
+                Random rand = new Random();
+                int ranumber = rand.Next(0, range);
+                var result = Questions.FirstOrDefault(c => c.SNo == ranumber);
+
+                if (result != null)
+                { Questions.Remove(result); }
+
+                int count = (from e in Questions select e.SNo).Count();
+
+                if (count == 5)
+                { stopflag = "N"; }
+            }
+
+
 
             totaltime = Questions.Sum(Question => Convert.ToInt32(Question.Time));
 
-       totalquestions = (from e in res  select e.No).Count();  
-        
-            Questions= Questions.OrderByDescending(s => s.SNo).ToList();
+            totalquestions = (from e in Questions select e.SNo).Count();
+            maxnumber = (from e in Questions select e.SNo).Max();
+            minumber = (from e in Questions select e.SNo).Min();
+            Questions = Questions.OrderByDescending(s => s.SNo).ToList();
         }
 
 
 
 
     }
-       
+
 }
