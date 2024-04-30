@@ -39,5 +39,9 @@ namespace MauiAppMCQs.Models
 
         public string Solution { get; set; }
 
+        internal IEnumerable<Question> Select(Func<object, Question> value)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

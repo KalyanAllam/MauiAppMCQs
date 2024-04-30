@@ -7,6 +7,8 @@ using Microsoft.JSInterop;
 using System.Text;
 using System.Net.Http.Headers;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Threading;
+using System.Collections.Generic;
 
 namespace MauiAppMCQs.Pages
 {
@@ -222,46 +224,75 @@ namespace MauiAppMCQs.Pages
 
 
             List<InQuestion> res = await GetApiData();
+            List<InQuestion> dest;
+               string stopflag = "Y";
 
-
-
-
-
-
-
-            Questions.AddRange(res.Select(r => new Question
-            {
-                SNo = r.No,
-                Topic = r.Topic,
-                QuestionTitle = r.QuestionTitle,
-                Options = new List<string>() { r.Opt1, r.Opt2, r.Opt3, r.Opt4 },
-                Answer = r.Answer,
-                Time = r.Time,
-                Correct = r.Correct,
-                Solution = r.Solution
-
-            }));
-            int maxnumber = (from e in Questions select e.SNo).Max();
-            int minumber = (from e in Questions select e.SNo).Min();
+            int maxnumber = (from e in res select e.No).Max();
+            int minumber = (from e in res select e.No).Min();
             int range = maxnumber + 1;
-            string stopflag = "Y";
-
+            Random rand = new Random();
+            int ranumber;
             while (stopflag == "Y")
             {
-
-                Random rand = new Random();
-                int ranumber = rand.Next(0, range);
+                 ranumber = rand.Next(0, range);
                 var result = Questions.FirstOrDefault(c => c.SNo == ranumber);
+            //   dest= res.FirstOrDefault(c => c.No == ranumber);
+                if (result == null)
+            {
+                Questions.AddRange(res.Where(r => r.No == ranumber).Select(r => new Question
+                {
+                    SNo = r.No,
+                    Topic = r.Topic,
+                    QuestionTitle = r.QuestionTitle,
+                    Options = new List<string>() { r.Opt1, r.Opt2, r.Opt3, r.Opt4 },
+                    Answer = r.Answer,
+                    Time = r.Time,
+                    Correct = r.Correct,
+                    Solution = r.Solution
 
-                if (result != null)
-                { Questions.Remove(result); }
-
+                }));
+                }
                 int count = (from e in Questions select e.SNo).Count();
 
                 if (count == 10)
                 { stopflag = "N"; }
             }
 
+            /*
+
+                Questions.AddRange(res.Select(r => new Question
+                {
+                    SNo = r.No,
+                    Topic = r.Topic,
+                    QuestionTitle = r.QuestionTitle,
+                    Options = new List<string>() { r.Opt1, r.Opt2, r.Opt3, r.Opt4 },
+                    Answer = r.Answer,
+                    Time = r.Time,
+                    Correct = r.Correct,
+                    Solution = r.Solution
+
+                }));
+                int maxnumber = (from e in Questions select e.SNo).Max();
+                int minumber = (from e in Questions select e.SNo).Min();
+                int range = maxnumber + 1;
+                string stopflag = "Y";
+
+                while (stopflag == "Y")
+                {
+
+                    Random rand = new Random();
+                    int ranumber = rand.Next(0, range);
+                    var result = Questions.FirstOrDefault(c => c.SNo == ranumber);
+
+                    if (result != null)
+                    { Questions.Remove(result); }
+
+                    int count = (from e in Questions select e.SNo).Count();
+
+                    if (count == 10)
+                    { stopflag = "N"; }
+                }
+            */
 
 
             totaltime = Questions.Sum(Question => Convert.ToInt32(Question.Time));
