@@ -34,18 +34,22 @@
 <p role="status">@QuestionTitleh</p>
 
 <p role="status">@QuestionTitle</p>
+
+
+<p role="status">@QuestionTitle</p>
 <p role="status">@Answerh</p>
 
 <p role="status">@Answer</p>
 
 @if (Questions.ToList().Count > 0)
 {
-
+    <p role="status">@timeh</p>
+    <p role="status">@time</p>
     <button class="btn btn-primary" @onclick="ToggleAnswer">@buttonText</button>
 
     <p style="display:@display">@solutionh</p>
     <p style="display:@display">@solution</p>
-
+    
 }
 
 
@@ -75,7 +79,7 @@
     public int _currentCount = 0; public int _currentMin = 0;
     private System.Timers.Timer _timer;
     public int maxnumber; public int minumber; public string solution; public string Topic; public string QuestionTitle;
-    public string Answer;
+    public string Answer;public int time; public string timeh;
     bool isInitialized = false;
     string solutionh;
 
@@ -96,14 +100,14 @@
     {
         string bypass = "N";
 
-        if (_currentCount > 3000)
+        if (_currentCount > 600)
         {
             bypass = "Y";
             errormessage = "";
 
         }
         else
-        { errormessage = "Cannot Show Solution until 5 minutes"; }
+        { errormessage = "Cannot Show Solution until 1 minute "; }
         if (bypass == "Y")
         {
             if (display == "none")
@@ -347,6 +351,8 @@
         solutionh = "Solution";
         Topic = result.Topic;
         Topich = "Topic";
+        time = (result.Time)/60;
+        timeh = "Time in minutes";
         QuestionTitle = result.QuestionTitle;
         QuestionTitleh = "QuestionTitle";
         Answer = result.Answer;
