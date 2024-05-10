@@ -103,7 +103,11 @@ namespace MauiAppMCQs.Pages
             //    string apiUrl = "https://sheet2api.com/v1/UHC796KdSvqC/testsp";
 
 
-            string jwturl = "https://supaquizapi.azurewebsites.net/api/";
+        string jwturl = "https://supaquizapi.azurewebsites.net/api/";
+
+          //  string jwturl = "https://quizapijwt.azurewebsites.net/api/";
+
+
             List<InQuestion> Questions = new List<InQuestion>();
 
 
@@ -123,8 +127,8 @@ namespace MauiAppMCQs.Pages
 
 
 
-            string apiUrl = "https://supaquizapi.azurewebsites.net/api/";
-
+              string apiUrl = "https://supaquizapi.azurewebsites.net/api/";
+        //  string apiUrl= "https://quizapijwt.azurewebsites.net/api/";
             using (HttpClient client = new HttpClient())
             {
                 try
@@ -136,11 +140,11 @@ namespace MauiAppMCQs.Pages
                     client.DefaultRequestHeaders.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpResponseMessage response = null;
-
+                    response = await client.GetAsync("Questions");
                     // Check if the request was successful (status code 200)
                     if (response.IsSuccessStatusCode)
                     {
-                        response = await client.GetAsync("Questions");
+                      //  response = await client.GetAsync("Questions");
                         // Make a GET request to the API
 
                         connected = "Y";
@@ -258,42 +262,7 @@ namespace MauiAppMCQs.Pages
                 { stopflag = "N"; }
             }
 
-            /*
-
-                Questions.AddRange(res.Select(r => new Question
-                {
-                    SNo = r.No,
-                    Topic = r.Topic,
-                    QuestionTitle = r.QuestionTitle,
-                    Options = new List<string>() { r.Opt1, r.Opt2, r.Opt3, r.Opt4 },
-                    Answer = r.Answer,
-                    Time = r.Time,
-                    Correct = r.Correct,
-                    Solution = r.Solution
-
-                }));
-                int maxnumber = (from e in Questions select e.SNo).Max();
-                int minumber = (from e in Questions select e.SNo).Min();
-                int range = maxnumber + 1;
-                string stopflag = "Y";
-
-                while (stopflag == "Y")
-                {
-
-                    Random rand = new Random();
-                    int ranumber = rand.Next(0, range);
-                    var result = Questions.FirstOrDefault(c => c.SNo == ranumber);
-
-                    if (result != null)
-                    { Questions.Remove(result); }
-
-                    int count = (from e in Questions select e.SNo).Count();
-
-                    if (count == 10)
-                    { stopflag = "N"; }
-                }
-            */
-
+             
 
             totaltime = Questions.Sum(Question => Convert.ToInt32(Question.Time));
 
