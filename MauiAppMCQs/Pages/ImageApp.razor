@@ -5,8 +5,7 @@
 @using System.Timers;
 @using MauiAppMCQs.Models;
 
-@page "/QuizApp"
-
+@page "/ImageApp"
 <PageTitle>QuizApp</PageTitle>
 
 @if (Questions.ToList().Count <= 0)
@@ -40,8 +39,9 @@
 
 <p role="status">@Answer</p>
 
+<p>@ImageData</p>
 
-
+ 
 @if (Questions.ToList().Count > 0)
 {
     <p role="status">@timeh</p>
@@ -51,6 +51,8 @@
     <p style="display:@display">@solutionh</p>
     <p style="display:@display">@solution</p>
     <p>@(_currentCount)</p>
+
+  
 }
 
 
@@ -61,7 +63,7 @@
 
 
 
-
+    public byte[] ImageData;
 
 
 
@@ -69,9 +71,9 @@
     private string activity = "";
     public string code; public string errortoggle = ""; public string errormessage = ""; public string checkflag = "N";
     public string matches;
-    QuestionsDatabase questionsDatabase;
+
     public int number;
-    public List<Question> Questions { get; set; } = new List<Question>();
+    public List<QuestionI> Questions { get; set; } = new List<QuestionI>();
     protected int questionIndex = 0;
     protected int score = 0;
     protected int failedIndex = 0;
@@ -90,13 +92,13 @@
 
     string Answerh;
 
-    List<InQuestion> res;
+    List<QuestionI> res;
     private string display = "none";
     private string buttonText = "Hide Solution";
     public int range;
     string filler = "/";
 
-
+   
     private void ToggleAnswer()
     {
         string bypass = "N";
@@ -149,9 +151,9 @@
                 await InvokeAsync(StateHasChanged);
             };
             _timer.Enabled = true;
-            questionsDatabase = new QuestionsDatabase();
+
             LoadQuestionsAsync();
-              checkflag = "N";
+            checkflag = "N";
             errormessage = " ";
         }
 
@@ -172,12 +174,11 @@
         };
         _timer.Enabled = true;
 
-      
 
 
 
 
-        questionsDatabase = new QuestionsDatabase();
+
         LoadQuestionsAsync();
 
 
@@ -188,14 +189,14 @@
 
 
     }
-    async Task<List<InQuestion>> GetApiData()
+    async Task<List<QuestionI>> GetApiData()
     {
 
 
 
-          string jwturl = "https://supaquizapi.azurewebsites.net/api/";
-      // string jwlurl="https://quizapijwt.azurewebsites.net/api/";
-        List<InQuestion> Questions = new List<InQuestion>();
+
+        string jwlurl="https://quizapijwt.azurewebsites.net/api/";
+        List<QuestionI> Questions = new List<QuestionI>();
 
 
 
@@ -214,16 +215,16 @@
 
 
 
-        string apiUrl = "https://supaquizapi.azurewebsites.net/api/";
-     //  string apiUrl="https://quizapijwt.azurewebsites.net/api/";
-      
+
+        string apiUrl="https://quizapijwt.azurewebsites.net/api/";
+
         using (HttpClient client = new HttpClient())
         {
             try
             {
                 // Make a GET request to the API
                 //    HttpResponseMessage response = await client.GetAsync(apiUrl);
-                questionsDatabase = new QuestionsDatabase();
+
                 client.BaseAddress = new Uri(apiUrl);
 
                 client.DefaultRequestHeaders.Clear();
@@ -243,58 +244,21 @@
 
 
                     // Deserialize the JSON string into an object
-                    Questions = JsonConvert.DeserializeObject<List<InQuestion>>(jsonString);
+                    Questions = JsonConvert.DeserializeObject<List<QuestionI>>(jsonString);
                     // truncate sqlLIte table Load sqlite table  from  Questions
                     //If the first time when you load the api data, it will push data to the sqlite DB.
 
                     //comment begins
 
-                    List<InQuestion> itemInTheDB = await questionsDatabase.GetItemsAsync();
-                    //    if (itemInTheDB.Count == 0)
-                    // {
 
 
-                    foreach (InQuestion item in itemInTheDB)
-                    {
-                        var result = Questions.FirstOrDefault(c => c.SNo == item.SNo);
-
-                        if (result == null)
-                        {
-                            await questionsDatabase.DeleteItemAsync(item);
-                        }
-                    }
-
-                    foreach (InQuestion itemdb in Questions)
-                    {
-                        var resulty = itemInTheDB.FirstOrDefault(c => c.SNo == itemdb.SNo);
-                        matches = "N";
-
-
-                        if (resulty == null)
-                        { await questionsDatabase.SaveItemAsync(itemdb); }
-
-
-                        if (resulty != null)
-                        {
-                            if ((resulty.No == itemdb.No) && (resulty.Opt1 == itemdb.Opt1) && (resulty.Opt2 == itemdb.Opt2) && (resulty.Opt3 == itemdb.Opt3) && (resulty.Opt4 == itemdb.Opt4)
-                             && (resulty.QuestionTitle == itemdb.QuestionTitle) && (resulty.Solution == itemdb.Solution) && (resulty.Time == itemdb.Time) && (resulty.Answer == itemdb.Answer)
-                             && (resulty.Topic == itemdb.Topic))
-                            { matches = "Y"; }
-
-                        }
-                        else
-                        { await questionsDatabase.SaveItemAsync(itemdb); }
-                        if (matches == "N")
-                        { await questionsDatabase.SaveItemAsync(itemdb); }
-
-                    }
                     //   }
                     //comment ends
 
                 }
                 else
                 { // Load  Questions from sql lite  table
-                    Questions = await questionsDatabase.GetItemsAsync();
+
 
                 }
             }
@@ -302,7 +266,7 @@
             {
                 if (connected == "N")
                 {
-                    Questions = await questionsDatabase.GetItemsAsync();
+
 
                 }
 
@@ -327,17 +291,17 @@
 
 
 
-            Questions.AddRange(res.Select(r => new Question
+            Questions.AddRange(res.Select(r => new QuestionI
                 {
                     SNo = r.No,
                     Topic = r.Topic,
                     QuestionTitle = r.QuestionTitle,
-                    Options = new List<string>() { r.Opt1, r.Opt2, r.Opt3, r.Opt4 },
+
                     Answer = r.Answer,
                     Time = r.Time,
                     Correct = r.Correct,
-                    Solution = r.Solution
-
+                    Solution = r.Solution,
+                    Imagedata=r.Imagedata
                 }));
             isInitialized = true;
 
@@ -361,6 +325,8 @@
         QuestionTitleh = "QuestionTitle";
         Answer = result.Answer;
         Answerh = "Answer";
+        ImageData = result.Imagedata;
+
     }
 
 

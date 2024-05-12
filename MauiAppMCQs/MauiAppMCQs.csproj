@@ -63,6 +63,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Content Remove="Pages\ImageApp.razor" />
       <Content Remove="Pages\QuizCard.razor" />
     </ItemGroup>
 
@@ -78,11 +79,17 @@
     </ItemGroup>
 
     <ItemGroup>
+      <_ContentIncludedByDefault Remove="Pages\ImageApp.razor" />
       <_ContentIncludedByDefault Remove="Pages\QuizCard.razor" />
     </ItemGroup>
 
     <ItemGroup>
+      <None Include="Pages\ImageApp.razor" />
       <None Include="Pages\QuizCard.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Pages\ImageApp.razor" />
     </ItemGroup>
 
 </Project>
