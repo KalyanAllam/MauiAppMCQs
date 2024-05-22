@@ -258,7 +258,7 @@ namespace MauiAppMCQs.Pages
                 }
                 int count = (from e in Questions select e.SNo).Count();
 
-                if (count == 10)
+                if (count == 20)
                 { stopflag = "N"; }
             }
 

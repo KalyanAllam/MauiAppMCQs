@@ -35,11 +35,8 @@
 <p role="status">@QuestionTitle</p>
 
  
-<p role="status">@Answerh</p>
 
-<p role="status">@Answer</p>
-
-<p>@ImageData</p>
+<img src="@imageDataURL" />
 
  
 @if (Questions.ToList().Count > 0)
@@ -50,7 +47,12 @@
 
     <p style="display:@display">@solutionh</p>
     <p style="display:@display">@solution</p>
-    <p>@(_currentCount)</p>
+
+    <p style="display:@display">@Answerh</p>
+
+    <p style="display:@display">@Answer</p>
+
+    <p>@(_currentCount/10)</p>
 
   
 }
@@ -66,7 +68,7 @@
     public byte[] ImageData;
 
 
-
+  public  string imageDataURL;
     //   using Communication = Microsoft.Maui.ApplicationModel.Communication;
     private string activity = "";
     public string code; public string errortoggle = ""; public string errormessage = ""; public string checkflag = "N";
@@ -98,19 +100,19 @@
     public int range;
     string filler = "/";
 
-   
+
     private void ToggleAnswer()
     {
         string bypass = "N";
 
-        if (_currentCount > 60 )
+        if (_currentCount > 5 )
         {
             bypass = "Y";
             errormessage = "";
 
         }
         else
-        { errormessage = "Cannot Show Solution until 1 minute "; }
+        { errormessage = "Cannot Show Solution until 5 seconds "; }
         if (bypass == "Y")
         {
             if (display == "none")
@@ -326,6 +328,9 @@
         Answer = result.Answer;
         Answerh = "Answer";
         ImageData = result.Imagedata;
+        string imagesrc; 
+        imagesrc = Convert.ToBase64String(ImageData);
+        imageDataURL = string.Format("data:image/jpeg;base64,{0}", imagesrc);
 
     }
 
