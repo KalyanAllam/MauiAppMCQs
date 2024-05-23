@@ -1,11 +1,29 @@
 ﻿@page "/"
 @inject MauiAppMCQs.Models.MyClass myClass
+@inject NavigationManager navigationManager
  
 <h1>  Quiz </h1>
 <h1>  Select Number of Questions and Click on Quiz </h1>
 <div class="row">
     <p>Questions:</p>
-    <input type="range" min="5" max="20" step="5" @bind="@myClass.InputQuestions"
+    <input type="range" min="5" max="20" step="5" @bind="@Id"
     @bind:event="oninput" />
 </div>
-<p>@myClass.InputQuestions</p>
+<p>@Id</p>
+
+
+
+<button @onclick="PassId">
+  Click here to Quiz to Load
+</button>
+
+
+@code {
+    public int Id=5;
+    public void PassId()
+    {
+
+   
+        navigationManager.NavigateTo($"/quizcard/{Id}", true);
+    }
+}

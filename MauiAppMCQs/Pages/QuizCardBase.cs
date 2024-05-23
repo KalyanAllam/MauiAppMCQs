@@ -12,6 +12,8 @@ namespace MauiAppMCQs.Pages
 {
     public class QuizCardBase : ComponentBase
     {
+        [Parameter]
+        public int Id { get; set; }
         public string code;
         public List<Question> Questions { get; set; } = new List<Question>();
         protected int questionIndex = 0;
@@ -41,7 +43,7 @@ namespace MauiAppMCQs.Pages
             _timer.Enabled = true;
             //  Uncomment below line if db needs to be loaded
             questionsDatabase = new QuestionsDatabase();
-            myclass =new MyClass();
+            myclass = new MyClass();
             LoadQuestionsAsync();
 
             return base.OnInitializedAsync();
@@ -258,7 +260,7 @@ namespace MauiAppMCQs.Pages
                 }
                 int count = (from e in Questions select e.SNo).Count();
                  
-                if (count == myclass.InputQuestions)
+                if (count == Id)
                 { stopflag = "N"; }
             }
 
