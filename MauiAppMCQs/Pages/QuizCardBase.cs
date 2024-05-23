@@ -3,7 +3,9 @@ using MauiAppMCQs.Models;
 using Newtonsoft.Json;
 using System.Timers;
 using Microsoft.JSInterop;
+using static CoreFoundation.DispatchSource;
 
+using MauiAppMCQs.Data;
 using System.Text;
 using System.Net.Http.Headers;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -258,7 +260,7 @@ namespace MauiAppMCQs.Pages
                 }
                 int count = (from e in Questions select e.SNo).Count();
 
-                if (count == 20)
+                if (count == inputquestions)
                 { stopflag = "N"; }
             }
 
