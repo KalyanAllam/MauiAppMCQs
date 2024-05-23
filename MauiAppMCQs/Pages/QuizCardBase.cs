@@ -3,7 +3,8 @@ using MauiAppMCQs.Models;
 using Newtonsoft.Json;
 using System.Timers;
 using Microsoft.JSInterop;
- 
+
+
 using System.Net.Http.Headers;
  
 
@@ -23,6 +24,7 @@ namespace MauiAppMCQs.Pages
         [Inject]
         protected IJSRuntime JS { get; set; }  //used to call javascript from .NET method.
         private string selectedanswer = "";         //used to store the selected answer.
+        MyClass myclass;
         QuestionsDatabase questionsDatabase;
         public bool IsDisabled = true;
         public string matches;
@@ -39,6 +41,7 @@ namespace MauiAppMCQs.Pages
             _timer.Enabled = true;
             //  Uncomment below line if db needs to be loaded
             questionsDatabase = new QuestionsDatabase();
+            myclass =new MyClass();
             LoadQuestionsAsync();
 
             return base.OnInitializedAsync();
@@ -254,8 +257,8 @@ namespace MauiAppMCQs.Pages
                 }));
                 }
                 int count = (from e in Questions select e.SNo).Count();
-
-                if (count == 20)
+                 
+                if (count == myclass.InputQuestions)
                 { stopflag = "N"; }
             }
 

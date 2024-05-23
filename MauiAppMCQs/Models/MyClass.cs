@@ -8,6 +8,6 @@ namespace MauiAppMCQs.Models
 {
     public  class MyClass
     {
-        public   int InputQuestions { get; set; } = 5;
+        public int InputQuestions { get; set; } = 5;
     }
 }

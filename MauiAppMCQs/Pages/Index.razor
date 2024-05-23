@@ -1,3 +1,11 @@
 ﻿@page "/"
-<h1>  Quiz </h1>
+@inject MauiAppMCQs.Models.MyClass myClass
  
+<h1>  Quiz </h1>
+<h1>  Select Number of Questions and Click on Quiz </h1>
+<div class="row">
+    <p>Questions:</p>
+    <input type="range" min="5" max="20" step="5" @bind="@myClass.InputQuestions"
+    @bind:event="oninput" />
+</div>
+<p>@myClass.InputQuestions</p>

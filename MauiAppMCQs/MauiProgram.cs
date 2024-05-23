@@ -25,6 +25,9 @@ namespace MauiAppMCQs
             builder.Services.AddSingleton<WeatherForecastService>();
 
 
+            builder.Services.AddSingleton<MyClass>();
+
+
             builder.Services.AddSingleton<QuestionsDatabase>();
 
             return builder.Build();
