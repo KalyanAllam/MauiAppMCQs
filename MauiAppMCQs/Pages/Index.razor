@@ -3,5 +3,17 @@
 <h1>  Quiz </h1>
 
 Click on  Quiz  .
-  
- 
+
+
+
+<div class="row">
+    <p>Questions:</p>
+    <input type="range" min="5" max="25" step="5" @bind="@inputquestions"
+     @bind:event="oninput" />
+</div>
+
+<p>@inputquestions</p>
+
+@code {
+    public int inputquestions;
+}
