@@ -6,7 +6,7 @@
 <h1>  Select Number of Questions and Click on Quiz </h1>
 <div class="row">
     <p>Questions:</p>
-    <input type="range" min="5" max="20" step="5" @bind="@Id"
+    <input type="range" min="5" max="25" step="5" @bind="@Id"
     @bind:event="oninput" />
 </div>
 <p>@Id</p>
@@ -14,7 +14,7 @@
 
 
 <button @onclick="PassId">
-  Click here to Quiz to Load
+ Quiz
 </button>
 
 
