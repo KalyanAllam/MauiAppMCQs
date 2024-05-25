@@ -238,9 +238,12 @@ namespace MauiAppMCQs.Pages
             int range = maxnumber + 1;
             Random rand = new Random();
             int ranumber;
+
+            int newsno = 0;
             while (stopflag == "Y")
             {
-                 ranumber = rand.Next(0, range);
+                newsno = newsno + 1;
+                ranumber = rand.Next(0, range);
                 var result = Questions.FirstOrDefault(c => c.SNo == ranumber);
             //   dest= res.FirstOrDefault(c => c.No == ranumber);
                 if (result == null)
@@ -267,11 +270,20 @@ namespace MauiAppMCQs.Pages
              
 
             totaltime = Questions.Sum(Question => Convert.ToInt32(Question.Time));
+         int questionSno = 0;
+            foreach (var question in Questions)
+             {
+               questionSno = questionSno + 1;
+                question.SNo = questionSno;
+           }
+
+
+
 
             totalquestions = (from e in Questions select e.SNo).Count();
             maxnumber = (from e in Questions select e.SNo).Max();
             minumber = (from e in Questions select e.SNo).Min();
-            Questions = Questions.OrderByDescending(s => s.SNo).ToList();
+        //    Questions = Questions.OrderByDescending(s => s.SNo).ToList();
         }
 
 

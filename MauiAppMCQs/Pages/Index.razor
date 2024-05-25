@@ -4,14 +4,21 @@
  
 <h1>  Quiz </h1>
 <h1>  Select Number of Questions and Click on Quiz </h1>
-<div class="row">
-    <p>Questions:</p>
-    <input type="range" min="5" max="25" step="5" @bind="@Id"
-    @bind:event="oninput" />
-</div>
+ 
 <p>@Id</p>
 
+<div class="row">
+    <select @bind="@Id"
+     @bind:event="oninput">
+        <option value="5">5 Questions</option>
+        <option value="10">10 Questions</option>
 
+        <option value="15">15 Questions</option>
+        <option value="20">20 Questions</option>
+
+        <option value="25">25 Questions</option>
+    </select>
+</div>
 
 <button @onclick="PassId">
  Quiz
@@ -19,7 +26,7 @@
 
 
 @code {
-    public int Id=5;
+    public int Id=5 ;
     public void PassId()
     {
 
