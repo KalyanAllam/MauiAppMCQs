@@ -108,19 +108,34 @@
               <div class="app-title">
                 
            @for (int i = 0; i < failedIndex; i++)
-                {
+                    {
+                        <p>
+                            Question
+                        </p>
                      <p>
                     @failedQuestions[i]
                     </p>
-                    
+                    <br />
+                        <p>
+                            Answer
+                        </p>
+                     <p>
+                        @failedAnswer[i]
+                        </p>
+                        
+                        <br />
+                        <p>
+                            Solution
+                        </p>
+                        <br />
+                        <p>
+                            @failedSolution[i]
+                        </p>
                 }
                     </div>
                 
 
-                <div class="quiz-footer">
-                    <!--    <p>Loading...</p>-->
-                    <!--     <button class="next-btn" @onclick="@RestartQuiz">Take Quiz</button>-->
-                </div>
+             
             }
             else
             { @if ((Questions.Count>0) && (@_currentCount>= @totaltime  ))
@@ -135,7 +150,7 @@
                 <div class="quiz-footer">
                     <p>Loading..</p>
 
-                    <!-- <button class="next-btn" @onclick="@RestartQuiz">Take Quiz</button>-->
+                 
                 </div>
             }
 

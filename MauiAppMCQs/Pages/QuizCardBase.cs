@@ -20,6 +20,9 @@ namespace MauiAppMCQs.Pages
         protected int score = 0;
         protected int failedIndex = 0;
         protected string[] failedQuestions = new string[500];
+        protected string[] failedAnswer = new string[500];
+        protected string[] failedSolution = new string[500];
+
         public int totaltime; public int totalquestions;
         public int _currentCount = 0;
         private System.Timers.Timer _timer;
@@ -65,7 +68,9 @@ namespace MauiAppMCQs.Pages
                 }
                 else
                 {
-                    failedQuestions[failedIndex] = Questions[questionIndex].QuestionTitle + "  Answer:  " + Questions[questionIndex].Answer + "  Solution:  " + Questions[questionIndex].Solution;
+                    failedQuestions[failedIndex] = Questions[questionIndex].QuestionTitle  ;
+                    failedAnswer[failedIndex] = Questions[questionIndex].Answer;
+                    failedSolution[failedIndex]=Questions[questionIndex].Solution;
                     failedIndex++;
 
 
@@ -73,7 +78,9 @@ namespace MauiAppMCQs.Pages
             }
             else
             {
-                failedQuestions[failedIndex] = Questions[questionIndex].QuestionTitle + "  Answer:  " + Questions[questionIndex].Answer + "  Solution:  " + Questions[questionIndex].Solution;
+                failedQuestions[failedIndex] = Questions[questionIndex].QuestionTitle;
+                failedAnswer[failedIndex] = Questions[questionIndex].Answer;
+                failedSolution[failedIndex] = Questions[questionIndex].Solution;
                 failedIndex++;
             }
             questionIndex++;
@@ -82,7 +89,7 @@ namespace MauiAppMCQs.Pages
         protected void OptionSelected(string option)
         {
             IsDisabled = false;
-            ;
+            
             selectedanswer = option.Trim();
         }
 
@@ -99,6 +106,8 @@ namespace MauiAppMCQs.Pages
             questionIndex = 0;
             failedIndex = 0;
             failedQuestions[failedIndex] = "";
+            failedAnswer[failedIndex] = "";
+            failedSolution[failedIndex] = "";
         }
         async Task<List<InQuestion>> GetApiData()
         {
