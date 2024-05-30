@@ -54,6 +54,21 @@ namespace MauiAppMCQs.Pages
 
 
         //    protected void OptionSelected(string option)
+
+
+
+
+        protected async void AnswerSkip()
+        {
+            IsDisabled = true;
+            value = selectedanswer;
+            await JS.InvokeVoidAsync("ClearStatus");  //call the javascript function to clear the radio button status when question changes.
+            failedQuestions[failedIndex] = Questions[questionIndex].QuestionTitle;
+            failedAnswer[failedIndex] = Questions[questionIndex].Answer;
+            failedSolution[failedIndex] = Questions[questionIndex].Solution;
+            failedIndex++;
+            questionIndex++;
+        }
         protected async void AnswerSubmit()
         {
             IsDisabled = true;
