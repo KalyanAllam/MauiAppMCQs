@@ -151,7 +151,7 @@
             _timer.Enabled = true;
             questionsDatabase = new QuestionsDatabase();
             LoadQuestionsAsync();
-              checkflag = "N";
+            checkflag = "N";
             errormessage = " ";
         }
 
@@ -172,7 +172,7 @@
         };
         _timer.Enabled = true;
 
-      
+
 
 
 
@@ -193,8 +193,8 @@
 
 
 
-          string jwturl = "https://supaquizapi.azurewebsites.net/api/";
-      // string jwlurl="https://quizapijwt.azurewebsites.net/api/";
+        string jwturl = "https://supaquizapi.azurewebsites.net/api/";
+        // string jwlurl="https://quizapijwt.azurewebsites.net/api/";
         List<InQuestion> Questions = new List<InQuestion>();
 
 
@@ -215,8 +215,8 @@
 
 
         string apiUrl = "https://supaquizapi.azurewebsites.net/api/";
-     //  string apiUrl="https://quizapijwt.azurewebsites.net/api/";
-      
+        //  string apiUrl="https://quizapijwt.azurewebsites.net/api/";
+
         using (HttpClient client = new HttpClient())
         {
             try
@@ -344,7 +344,8 @@
         }
         maxnumber = (from e in res select e.No).Max();
         minumber = (from e in res select e.No).Min();
-        range = maxnumber + 1;
+           range = maxnumber + 1; 
+        
         Questions = Questions.OrderByDescending(s => s.SNo).ToList();
 
 
