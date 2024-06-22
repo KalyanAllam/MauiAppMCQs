@@ -38,6 +38,9 @@ namespace MauiAppMCQs.Models
 
         public string Solution { get; set; }
         public byte[] Imagedata { get; set; }
+
+
+        public byte[] Imagesol { get; set; }
         internal IEnumerable<Question> Select(Func<object, Question> value)
         {
             throw new NotImplementedException();

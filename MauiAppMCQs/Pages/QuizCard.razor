@@ -55,8 +55,9 @@
 
             
                 <div class="quiz-header">
+                <p>Choose correct answer and Submit the Question </p>
                 <button class="btn btn-primary" disabled=@(IsDisabled) @onclick="AnswerSubmit">Submit</button>
-                   <button class="btn btn-primary"   @onclick="AnswerSkip">Skip</button>
+                  
             </div>
            
             <div class="quiz-body">
@@ -71,7 +72,12 @@
                 <p>  Time in Minutes</p>
                 @(@Questions[questionIndex].Time/60)
             </div>
-             
+
+
+            <div class="quiz-header">
+                <p>If answer not known Click Skip to Skip the question </p>
+                <button class="btn btn-primary" @onclick="AnswerSkip">Skip</button>
+            </div>
         }
         else
         { 
@@ -110,7 +116,7 @@
                 
            @for (int i = 0; i < failedIndex; i++)
                     {
-                         <p>
+                        <p>
                             Question
                         </p>
                         
