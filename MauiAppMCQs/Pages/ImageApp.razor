@@ -71,9 +71,9 @@
 
     public byte[] ImageData;
     public byte[] ImageSol;
+    public List<QuestionI> Questionsimgs { get; set; } = new List<QuestionI>();
 
-
-
+    QuestionsDatabaseimgs questionsDatabaseimgs;
     public string imageDataURL; public string imageSolURL;
     //   using Communication = Microsoft.Maui.ApplicationModel.Communication;
     private string activity = "";
@@ -159,7 +159,7 @@
                 await InvokeAsync(StateHasChanged);
             };
             _timer.Enabled = true;
-
+            questionsDatabaseimgs = new QuestionsDatabaseimgs();
             LoadQuestionsAsync();
             checkflag = "N";
             errormessage = " ";
@@ -185,7 +185,7 @@
 
 
 
-
+        questionsDatabaseimgs = new QuestionsDatabaseimgs();
 
         LoadQuestionsAsync();
 
@@ -258,6 +258,45 @@
 
                     //comment begins
 
+                    List<QuestionI> itemInTheDB = await questionsDatabaseimgs.GetItemsAsync();
+                    //    if (itemInTheDB.Count == 0)
+                    // {
+
+
+                    foreach (QuestionI item in itemInTheDB)
+                    {
+                        var result = Questions.FirstOrDefault(c => c.SNo == item.SNo);
+
+                        if (result == null)
+                        {
+                            await questionsDatabaseimgs.DeleteItemAsync(item);
+                        }
+                    }
+
+                    foreach (QuestionI itemdb in Questions)
+                    {
+                        var resulty = itemInTheDB.FirstOrDefault(c => c.SNo == itemdb.SNo);
+                        matches = "N";
+
+
+                        if (resulty == null)
+                        { await questionsDatabaseimgs.SaveItemAsync(itemdb); }
+
+
+                        if (resulty != null)
+                        {
+                            if ((resulty.No == itemdb.No) && (resulty.Opt1 == itemdb.Opt1) && (resulty.Opt2 == itemdb.Opt2) && (resulty.Opt3 == itemdb.Opt3) && (resulty.Opt4 == itemdb.Opt4)
+                             && (resulty.QuestionTitle == itemdb.QuestionTitle) && (resulty.Solution == itemdb.Solution) && (resulty.Time == itemdb.Time) && (resulty.Answer == itemdb.Answer)
+                             && (resulty.Topic == itemdb.Topic))
+                            { matches = "Y"; }
+
+                        }
+                        else
+                        { await questionsDatabaseimgs.SaveItemAsync(itemdb); }
+                        if (matches == "N")
+                        { await questionsDatabaseimgs.SaveItemAsync(itemdb); }
+
+                    }
 
 
                     //   }
@@ -267,16 +306,20 @@
                 else
                 { // Load  Questions from sql lite  table
 
-
+                    Questions = await questionsDatabaseimgs.GetItemsAsync();
                 }
             }
             catch (Exception ex)
             {
+            
                 if (connected == "N")
                 {
-
+                    Questions = await questionsDatabaseimgs.GetItemsAsync();
 
                 }
+
+
+            
 
 
             }

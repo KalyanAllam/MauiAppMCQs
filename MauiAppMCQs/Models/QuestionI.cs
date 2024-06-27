@@ -11,9 +11,9 @@ namespace MauiAppMCQs.Models
 
 
     {
-       
 
 
+        [PrimaryKey, Indexed]
         public int SNo { get; set; }
         public int No { get; set; }
 
