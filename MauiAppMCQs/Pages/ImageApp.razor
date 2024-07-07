@@ -68,7 +68,7 @@
 
 
 
-
+  public  string jwttoken;
     public byte[] ImageData;
     public byte[] ImageSol;
     public List<QuestionI> Questionsimgs { get; set; } = new List<QuestionI>();
@@ -203,12 +203,43 @@
 
 
 
-        string jwlurl="https://supaquizapi.azurewebsites.net/api/";
+   
         List<QuestionI> Questions = new List<QuestionI>();
 
+        var jsonContent = new StringContent(JsonConvert.SerializeObject(new
+        {
+            bodyField1 = "" 
+            
+        }), Encoding.UTF8, "application/json");
 
 
+        
+        using (var client1 = new HttpClient())
+        {
+            string authurl = "https://myquizapi.azurewebsites.net/api/";
 
+            client1.BaseAddress = new Uri(authurl);
+
+            client1.DefaultRequestHeaders.Clear();
+            client1.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            HttpResponseMessage Res = await client1.PostAsync("Auth", jsonContent);
+
+            if (Res.IsSuccessStatusCode)
+            {
+                //Storing the response details recieved from web api
+                string json = await Res.Content.ReadAsStringAsync();
+
+                // Parse the JSON response to extract the address
+                dynamic data1 = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+                jwttoken = data1.token;
+
+                
+
+
+            }
+
+        }
 
 
 
@@ -224,7 +255,7 @@
 
 
 
-        string apiUrl="https://supaquizapi.azurewebsites.net/api/";
+        string apiUrl = "https://myquizapi.azurewebsites.net/api/";
 
         using (HttpClient client = new HttpClient())
         {
@@ -237,6 +268,7 @@
 
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {jwttoken}");
                 HttpResponseMessage response = null;
                 response = await client.GetAsync("Questionsimgs");
                 // Check if the request was successful (status code 200)
