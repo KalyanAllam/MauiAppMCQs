@@ -1,0 +1,88 @@
+﻿@inject NavigationManager Navigation
+
+@page "/LCM"
+
+
+<h3>LCM of Two Numbers</h3>
+
+<EditForm Model="@submitActivity" OnSubmit="@Submit">
+
+    <br />
+    <div class="row">
+        <div class="col-md-3">
+            <p>Number1</p>
+        </div>
+        <div class="col-md-4">
+            <input placeholder="NUM 1" @bind="@num1" />
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-3">
+            <p>Number2</p>
+        </div>
+        <div class="col-md-4">
+            <input placeholder="NUM 2" @bind="@num2" />
+        </div>
+    </div>
+     <br />
+
+    <div>
+        <button type="submit">LCM</button>
+    </div>
+     <div>
+        @errmsg
+    </div>
+
+    
+    <div>
+        @lcm
+    </div>
+</EditForm>
+
+@code {
+    private int num1;private int num2; private int   lcm ; private int x; private int y; private int max;
+    public string skip; private int i;
+    public string @errmsg="";
+    private ACTIVITY submitActivity { get; set; } = new();
+    public class ACTIVITY
+    {
+        public string Dummy { get; set; }
+
+    }
+
+
+    private   void Submit()
+    {
+  skip = "N";
+   if (( num1==0 ) || (num2==0 ))
+   { skip = "Y";}
+
+      if (( num1<=0 ) || (num2<=0 ))
+   { skip = "Y";}
+   
+   if (( num1>100 ) || (num2>100 ))
+   { skip = "Y";}
+    
+   if ( skip == "N")
+     { 
+         max = (num1 >num2) ? num1 : num2;  // Determining the greater number between n1 and n2
+
+        // Loop to find the LCM using the brute-force approach
+        for (i = max;; i += max)  
+        {  
+            if (i % num1 == 0 && i % num2 == 0)  // Checking if i is divisible by both n1 and n2
+            {  
+                lcm = i;  // Updating the LCM when i is found to be divisible by both
+                break;  // Exiting the loop when the LCM is found
+            }  
+        }  
+     }
+   else
+
+     { errmsg ="Invalid Range";}
+    }
+
+    
+
+}

@@ -1,0 +1,53 @@
+﻿@inject NavigationManager Navigation
+
+@page "/Login"
+
+
+<h3>Login</h3>
+
+<EditForm Model="@submitActivity" OnSubmit="@Submit">
+
+    <br />
+    <div class="row">
+        <div class="col-md-3">
+            <p>PIN</p>
+        </div>
+        <div class="col-md-4">
+            <input placeholder="PIN" @bind="@pin" />
+        </div>
+    </div>
+    <div>
+        <button type="submit">Submit</button>
+    </div>
+
+    <div>
+        @errmsg
+    </div>
+</EditForm>
+
+@code {
+    private int pin;
+    public string @errmsg="";
+    private ACTIVITY submitActivity { get; set; } = new();
+    public class ACTIVITY
+    {
+        public string Dummy { get; set; }
+
+    }
+
+
+    private   void Submit()
+    {
+ 
+
+        if (pin != 2027)
+        {
+            errmsg = "Enter Valid 4 digit pin";
+        }
+        else
+        { Navigation.NavigateTo("/NewNav",true); }
+
+    }
+
+
+}

@@ -6,7 +6,8 @@ using Microsoft.JSInterop;
 
 
 using System.Net.Http.Headers;
- 
+using System.Text;
+using Newtonsoft.Json.Linq;
 
 namespace MauiAppMCQs.Pages
 {
@@ -14,7 +15,7 @@ namespace MauiAppMCQs.Pages
     {
         [Parameter]
         public int Id { get; set; }
-        public string code;
+        public string code;public string jwttoken;
         public List<Question> Questions { get; set; } = new List<Question>();
         protected int questionIndex = 0;
         protected int score = 0;
@@ -139,7 +140,40 @@ namespace MauiAppMCQs.Pages
 
 
 
+            var jsonContent = new StringContent(JsonConvert.SerializeObject(new
+            {
+                bodyField1 = ""
 
+            }), Encoding.UTF8, "application/json");
+
+
+
+            using (var client1 = new HttpClient())
+            {
+                string authurl = "https://myquizapi.azurewebsites.net/api/";
+
+                client1.BaseAddress = new Uri(authurl);
+
+                client1.DefaultRequestHeaders.Clear();
+                client1.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                HttpResponseMessage Res = await client1.PostAsync("Auth", jsonContent);
+
+                if (Res.IsSuccessStatusCode)
+                {
+                    //Storing the response details recieved from web api
+                    string json = await Res.Content.ReadAsStringAsync();
+
+                    // Parse the JSON response to extract the address
+                    dynamic data1 = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+                    jwttoken = data1.token;
+
+
+
+
+                }
+
+            }
 
 
 
@@ -153,8 +187,8 @@ namespace MauiAppMCQs.Pages
 
 
 
-              string apiUrl = "https://supaquizapi.azurewebsites.net/api/";
-        //  string apiUrl= "https://quizapijwt.azurewebsites.net/api/";
+              string apiUrl = "https://myquizapi.azurewebsites.net/api/";  
+          
             using (HttpClient client = new HttpClient())
             {
                 try
@@ -164,6 +198,7 @@ namespace MauiAppMCQs.Pages
                     client.BaseAddress = new Uri(jwturl);
 
                     client.DefaultRequestHeaders.Clear();
+                    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {jwttoken}");
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpResponseMessage response = null;
                     response = await client.GetAsync("Questions");

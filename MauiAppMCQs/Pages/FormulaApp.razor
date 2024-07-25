@@ -5,8 +5,7 @@
 @using System.Timers;
 @using MauiAppMCQs.Models;
 
-@page "/QuizApp"
-
+@page "/FormulaApp"
 <PageTitle>QuizApp</PageTitle>
 
 @if (Questions.ToList().Count <= 0)
@@ -36,21 +35,28 @@
 <p role="status">@QuestionTitle</p>
 
  
-<p role="status">@Answerh</p>
-
-<p role="status">@Answer</p>
 
 
 
+ 
 @if (Questions.ToList().Count > 0)
 {
-    <p role="status">@timeh</p>
-    <p role="status">@time</p>
+     
     <button class="btn btn-primary" @onclick="ToggleAnswer">@buttonText</button>
 
-    <p style="display:@display">@solutionh</p>
-    <p style="display:@display">@solution</p>
-   
+    
+
+    <p style="display:@display">@Answerh</p>
+
+    <p style="display:@display">@Answer</p>
+
+     <p style="display:@display">
+        <img src="@imageDataURL" />
+    </p>
+
+     
+
+  
 }
 
 
@@ -60,18 +66,20 @@
 
 
 
+  public  string jwttoken;
+    public byte[] ImageData;
+    public byte[] ImageSol;
+    public List<QuestionF> Questionsform { get; set; } = new List<QuestionF>();
 
-
-    public string jwttoken;
-
-
+    QuestionsDatabaseform questionsDatabaseform;
+    public string imageDataURL; public string imageSolURL;
     //   using Communication = Microsoft.Maui.ApplicationModel.Communication;
     private string activity = "";
     public string code; public string errortoggle = ""; public string errormessage = ""; public string checkflag = "N";
     public string matches;
-    QuestionsDatabase questionsDatabase;
+
     public int number;
-    public List<Question> Questions { get; set; } = new List<Question>();
+    public List<QuestionF> Questions { get; set; } = new List<QuestionF>();
     protected int questionIndex = 0;
     protected int score = 0;
     protected int failedIndex = 0;
@@ -90,7 +98,7 @@
 
     string Answerh;
 
-    List<InQuestion> res;
+    List<QuestionF> res;
     private string display = "none";
     private string buttonText = "Hide Solution";
     public int range;
@@ -101,14 +109,14 @@
     {
         string bypass = "N";
 
-        if (_currentCount > 60 )
+        if (_currentCount > 5 )
         {
             bypass = "Y";
             errormessage = "";
 
         }
         else
-        { errormessage = "Wait a moment for answer to Display "; }
+        { errormessage = "Cannot Show Solution until 5 seconds "; }
         if (bypass == "Y")
         {
             if (display == "none")
@@ -149,7 +157,7 @@
                 await InvokeAsync(StateHasChanged);
             };
             _timer.Enabled = true;
-            questionsDatabase = new QuestionsDatabase();
+            questionsDatabaseform = new QuestionsDatabaseform();
             LoadQuestionsAsync();
             checkflag = "N";
             errormessage = " ";
@@ -175,9 +183,8 @@
 
 
 
+        questionsDatabaseform = new QuestionsDatabaseform();
 
-
-        questionsDatabase = new QuestionsDatabase();
         LoadQuestionsAsync();
 
 
@@ -188,18 +195,14 @@
 
 
     }
-    async Task<List<InQuestion>> GetApiData()
+    async Task<List<QuestionF>> GetApiData()
     {
 
 
 
-        string jwturl = "https://supaquizapi.azurewebsites.net/api/";
-        // string jwlurl="https://quizapijwt.azurewebsites.net/api/";
-        List<InQuestion> Questions = new List<InQuestion>();
 
-
-
-
+   
+        List<QuestionF> Questions = new List<QuestionF>();
 
         var jsonContent = new StringContent(JsonConvert.SerializeObject(new
         {
@@ -208,6 +211,7 @@
         }), Encoding.UTF8, "application/json");
 
 
+        
         using (var client1 = new HttpClient())
         {
             string authurl = "https://myquizapi.azurewebsites.net/api/";
@@ -228,7 +232,7 @@
                 dynamic data1 = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
                 jwttoken = data1.token;
 
-
+                
 
 
             }
@@ -242,12 +246,14 @@
 
 
 
+
+
         string connected = "N";
 
 
 
-        string apiUrl = "https://myquizapi.azurewebsites.net/api/"; ;
-       
+
+        string apiUrl = "https://myquizapi.azurewebsites.net/api/";
 
         using (HttpClient client = new HttpClient())
         {
@@ -255,13 +261,14 @@
             {
                 // Make a GET request to the API
                 //    HttpResponseMessage response = await client.GetAsync(apiUrl);
-                questionsDatabase = new QuestionsDatabase();
+
                 client.BaseAddress = new Uri(apiUrl);
-                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {jwttoken}");
+
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {jwttoken}");
                 HttpResponseMessage response = null;
-                response = await client.GetAsync("Questions");
+                response = await client.GetAsync("Questionsforms");
                 // Check if the request was successful (status code 200)
                 if (response.IsSuccessStatusCode)
                 {
@@ -272,71 +279,77 @@
                     connected = "Y";
                     // Read the content of the response
                     string jsonString = await response.Content.ReadAsStringAsync();
-                  
+
 
                     // Deserialize the JSON string into an object
-                    Questions = JsonConvert.DeserializeObject<List<InQuestion>>(jsonString);
+                    Questions = JsonConvert.DeserializeObject<List<QuestionF>>(jsonString);
                     // truncate sqlLIte table Load sqlite table  from  Questions
                     //If the first time when you load the api data, it will push data to the sqlite DB.
 
                     //comment begins
 
-                    List<InQuestion> itemInTheDB = await questionsDatabase.GetItemsAsync();
+                    List<QuestionF> itemInTheDB = await questionsDatabaseform.GetItemsAsync();
                     //    if (itemInTheDB.Count == 0)
                     // {
 
 
-                    foreach (InQuestion item in itemInTheDB)
+                    foreach (QuestionF item in itemInTheDB)
                     {
                         var result = Questions.FirstOrDefault(c => c.SNo == item.SNo);
 
                         if (result == null)
                         {
-                            await questionsDatabase.DeleteItemAsync(item);
+                            await questionsDatabaseform.DeleteItemAsync(item);
                         }
                     }
 
-                    foreach (InQuestion itemdb in Questions)
+                    foreach (QuestionF itemdb in Questions)
                     {
                         var resulty = itemInTheDB.FirstOrDefault(c => c.SNo == itemdb.SNo);
                         matches = "N";
 
 
                         if (resulty == null)
-                        { await questionsDatabase.SaveItemAsync(itemdb); }
+                        { await questionsDatabaseform.SaveItemAsync(itemdb); }
 
 
                         if (resulty != null)
                         {
-                            if ((resulty.No == itemdb.No) && (resulty.Opt1 == itemdb.Opt1) && (resulty.Opt2 == itemdb.Opt2) && (resulty.Opt3 == itemdb.Opt3) && (resulty.Opt4 == itemdb.Opt4)
-                             && (resulty.QuestionTitle == itemdb.QuestionTitle) && (resulty.Solution == itemdb.Solution) && (resulty.Time == itemdb.Time) && (resulty.Answer == itemdb.Answer)
+                            if ((resulty.No == itemdb.No)  
+                             && (resulty.QuestionTitle == itemdb.QuestionTitle)   && (resulty.Answer == itemdb.Answer)
                              && (resulty.Topic == itemdb.Topic))
                             { matches = "Y"; }
 
                         }
                         else
-                        { await questionsDatabase.SaveItemAsync(itemdb); }
+                        { await questionsDatabaseform.SaveItemAsync(itemdb); }
                         if (matches == "N")
-                        { await questionsDatabase.SaveItemAsync(itemdb); }
+                        { await questionsDatabaseform.SaveItemAsync(itemdb); }
 
                     }
+
+
                     //   }
                     //comment ends
 
                 }
                 else
                 { // Load  Questions from sql lite  table
-                    Questions = await questionsDatabase.GetItemsAsync();
 
+                    Questions = await questionsDatabaseform.GetItemsAsync();
                 }
             }
             catch (Exception ex)
             {
+            
                 if (connected == "N")
                 {
-                    Questions = await questionsDatabase.GetItemsAsync();
+                    Questions = await questionsDatabaseform.GetItemsAsync();
 
                 }
+
+
+            
 
 
             }
@@ -359,41 +372,45 @@
 
 
 
-            Questions.AddRange(res.Select(r => new Question
+            Questions.AddRange(res.Select(r => new QuestionF
                 {
                     SNo = r.No,
                     Topic = r.Topic,
                     QuestionTitle = r.QuestionTitle,
-                    Options = new List<string>() { r.Opt1, r.Opt2, r.Opt3, r.Opt4 },
-                    Answer = r.Answer,
-                    Time = r.Time,
-                    Correct = r.Correct,
-                    Solution = r.Solution
 
+                    Answer = r.Answer,
+                   
+                    Imagedata=r.Imagedata 
+                   
                 }));
             isInitialized = true;
 
         }
         maxnumber = (from e in res select e.No).Max();
         minumber = (from e in res select e.No).Min();
-           range = maxnumber + 1; 
-        
+        range = maxnumber + 1;
         Questions = Questions.OrderByDescending(s => s.SNo).ToList();
 
 
         Random rand = new Random();
         number = rand.Next(minumber, range);
         var result = Questions.FirstOrDefault(c => c.SNo == number);
-        solution = result.Solution;
-        solutionh = "Solution";
+        
         Topic = result.Topic;
         Topich = "Topic";
-        time = (result.Time)/60;
-        timeh = "Time in minutes";
+        
+       
         QuestionTitle = result.QuestionTitle;
         QuestionTitleh = "QuestionTitle";
         Answer = result.Answer;
         Answerh = "Answer";
+        ImageData = result.Imagedata;
+       
+        string imagesrc; 
+        imagesrc = Convert.ToBase64String(ImageData);
+        imageDataURL = string.Format("data:image/jpeg;base64,{0}", imagesrc);
+        
+
     }
 
 
