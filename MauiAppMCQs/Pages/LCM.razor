@@ -54,9 +54,9 @@
 
     private   void Submit()
     {
-  skip = "N";
-   if (( num1==0 ) || (num2==0 ))
-   { skip = "Y";}
+        errmsg = "";
+        skip = "N";
+    
 
       if (( num1<=0 ) || (num2<=0 ))
    { skip = "Y";}
@@ -80,7 +80,7 @@
      }
    else
 
-     { errmsg ="Invalid Range";}
+     { errmsg ="Enter a number between 1 and 100";}
     }
 
     
