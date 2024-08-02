@@ -64,6 +64,7 @@
 
     <ItemGroup>
       <Content Remove="Pages\FormulaApp.razor" />
+      <Content Remove="Pages\HCF.razor" />
       <Content Remove="Pages\ImageApp.razor" />
       <Content Remove="Pages\LCM.razor" />
       <Content Remove="Pages\Login.razor" />
@@ -83,6 +84,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <_ContentIncludedByDefault Remove="Pages\HCF.razor" />
       <_ContentIncludedByDefault Remove="Pages\ImageApp.razor" />
       <_ContentIncludedByDefault Remove="Pages\LCM.razor" />
       <_ContentIncludedByDefault Remove="Pages\Login.razor" />
@@ -92,6 +94,7 @@
 
     <ItemGroup>
       <None Include="Pages\FormulaApp.razor" />
+      <None Include="Pages\HCF.razor" />
       <None Include="Pages\ImageApp.razor" />
       <None Include="Pages\LCM.razor" />
       <None Include="Pages\Login.razor" />
@@ -113,6 +116,10 @@
 
     <ItemGroup>
       <UpToDateCheckInput Remove="Pages\LCM.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Pages\HCF.razor" />
     </ItemGroup>
 
 </Project>

@@ -1,0 +1,86 @@
+﻿@inject NavigationManager Navigation
+
+@page "/HCF"
+
+
+<h3>    HCF of Two Numbers</h3>
+
+<EditForm Model="@submitActivity" OnSubmit="@Submit">
+
+    <br />
+    <div class="row">
+        <div class="col-md-3">
+            <p>Number1</p>
+        </div>
+        <div class="col-md-4">
+            <input placeholder="NUM 1" @bind="@num1" />
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-3">
+            <p>Number2</p>
+        </div>
+        <div class="col-md-4">
+            <input placeholder="NUM 2" @bind="@num2" />
+        </div>
+    </div>
+     <br />
+
+    <div>
+        <button type="submit">HCF</button>
+    </div>
+     <div>
+        @errmsg
+    </div>
+
+     
+    <div>
+        @hcf
+    </div>
+</EditForm>
+
+@code {
+    private int num1;private int num2; private int   hcf ; private int x; private int y; private int max;
+    public string skip; private int i;
+    public string @errmsg="";
+    private ACTIVITY submitActivity { get; set; } = new();
+    public class ACTIVITY
+    {
+        public string Dummy { get; set; }
+
+    }
+
+
+    private   void Submit()
+    {
+        errmsg = "";
+        skip = "N";
+    
+
+      if (( num1<=0 ) || (num2<=0 ))
+   { skip = "Y";}
+   
+   if (( num1>100 ) || (num2>100 ))
+   { skip = "Y";}
+    
+   if ( skip == "N")
+     { 
+        
+       for(i=1;i<=num1||i<=num2;++i)
+            {
+                if(num1%i==0 && num2%i==0)
+                {
+                    hcf=i;
+                }
+            }    
+     }
+   else
+
+     { errmsg ="Enter a number between 1 and 100";}
+    }
+
+    
+
+}
+
