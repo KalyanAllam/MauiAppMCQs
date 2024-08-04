@@ -1,5 +1,9 @@
 ﻿@inject NavigationManager Navigation
-
+@using System.Text;
+@using System.Net.Http.Headers;
+@using Microsoft.AspNetCore.Components;
+@using Newtonsoft.Json;
+ @using Microsoft.JSInterop;
 @page "/Login"
 
 
@@ -26,9 +30,26 @@
 </EditForm>
 
 @code {
-    private int pin;
+    private int pin; private string jwttoken; private string connected; private string jsonString;
     public string @errmsg="";
     private ACTIVITY submitActivity { get; set; } = new();
+    List<Questionpin> Questions = new List<Questionpin>();
+    List<Questionpin> res;
+
+    public class Questionpin
+    {
+
+
+
+        public long Id { get; set; }
+
+        public int  Pinnum { get; set; }
+
+
+
+    }
+
+
     public class ACTIVITY
     {
         public string Dummy { get; set; }
@@ -36,18 +57,91 @@
     }
 
 
-    private   void Submit()
+    private async void Submit()
     {
- 
+        var jsonContent = new StringContent(JsonConvert.SerializeObject(new
+        {
+            bodyField1 = ""
 
-        if (pin != 1857)
+        }), Encoding.UTF8, "application/json");
+
+
+
+        using (var client1 = new HttpClient())
+        {
+            string authurl = "https://myquizapi.azurewebsites.net/api/";
+
+            client1.BaseAddress = new Uri(authurl);
+
+            client1.DefaultRequestHeaders.Clear();
+            client1.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            HttpResponseMessage Res = await client1.PostAsync("Auth", jsonContent);
+
+            if (Res.IsSuccessStatusCode)
+            {
+                //Storing the response details recieved from web api
+                string json = await Res.Content.ReadAsStringAsync();
+
+                // Parse the JSON response to extract the address
+                dynamic data1 = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+                jwttoken = data1.token;
+
+
+
+
+            }
+
+        }
+
+
+
+        string apiUrl = "https://myquizapi.azurewebsites.net/api/";
+
+        using (HttpClient client = new HttpClient())
+        {
+
+
+
+            client.BaseAddress = new Uri(apiUrl);
+
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {jwttoken}");
+            HttpResponseMessage response = null;
+            response = await client.GetAsync("pins");
+            // Check if the request was successful (status code 200)
+            if (response.IsSuccessStatusCode)
+            {
+
+
+                // Make a GET request to the API
+
+                connected = "Y";
+                // Read the content of the response
+                string jsonString = await response.Content.ReadAsStringAsync();
+
+
+                // Deserialize the JSON string into an object
+                Questions = JsonConvert.DeserializeObject<List<Questionpin>>(jsonString);
+
+            }
+        }
+
+
+        var result = Questions.FirstOrDefault(c => c.Pinnum == pin);
+
+
+        if (result == null)
         {
             errmsg = "Enter Valid  pin";
         }
         else
-        { Navigation.NavigateTo("/NewNav",true); }
+        { Navigation.NavigateTo("/NewNav", true); }
 
     }
+ 
+
 
 
 }
